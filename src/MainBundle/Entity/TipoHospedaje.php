@@ -23,11 +23,18 @@ class TipoHospedaje
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="nombre", type="string", length=255, unique=true)
-     */
+ * @var string
+ *
+ * @ORM\Column(name="nombre", type="string", length=255, unique=true)
+ */
     private $nombre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="borrado", type="integer", length=1,  options={"default" = 0})
+     */
+    private $borrado;
 
     /**
      * @ORM\OneToMany(targetEntity="Hospedaje", mappedBy="tipohospedaje")
@@ -106,5 +113,21 @@ class TipoHospedaje
     public function getHospedajes()
     {
         return $this->hospedajes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBorrado()
+    {
+        return $this->borrado;
+    }
+
+    /**
+     * @param mixed $borrado
+     */
+    public function setBorrado($borrado)
+    {
+        $this->borrado = $borrado;
     }
 }
