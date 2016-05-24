@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ parent() }}
+    <div class="main container">
+        <div class="row well">
+            <div class="col-md-6">
+                <div class="page-header">
+                    <h2>Editar Tipo</h2>
+                </div>
+                {{ form_start(form, { 'attr' : {'novalidate': 'novalidate'} }) }}
+                <h4 class="text-danger">{{ form_errors(form) }}</h4>
+
+                <fieldset>
+                    <div class="form-group">
+                        {{ form_label(form.nombre) }}
+                        {{ form_widget(form.nombre, {'attr': {'class': 'form-control', 'placeholder' : 'nombre' }}) }}
+                        <span class="text-danger">{{ form_errors(form.nombre) }}</span>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group">
+                        {{ form_label(form.borrado) }}
+                        {{ form_widget(form.borrado, {'attr': {'class': 'form-control', 'placeholder' : 'borrado' }}) }}
+                        <span class="text-danger">{{ form_errors(form.borrado) }}</span>
+                    </div>
+                </fieldset>
+
+                <p>
+                    {{ form_widget(form.submit, {'label' : 'Update user', 'attr': {'class': 'btn btn-success'}}) }}
+                </p>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
