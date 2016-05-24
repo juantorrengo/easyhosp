@@ -46,7 +46,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Tipo no encontrado');
         }
 
-        $form = $this->createEditForm($tipo);       //$form = $this->createForm(TipoType::class, $tipo);
+        $form = $this->createEditForm($tipo);   
         return $this->render('MainBundle:Default:edit.html.twig',array(
             'form' => $form->createView(),
             'tipo' => $tipo
