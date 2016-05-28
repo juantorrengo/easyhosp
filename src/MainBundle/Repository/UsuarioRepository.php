@@ -1,6 +1,6 @@
 <?php
 
-namespace MainBundle\Repository\Entity;
+namespace MainBundle\Repository;
 
 /**
  * UsuarioRepository

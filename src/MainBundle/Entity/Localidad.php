@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Localidad
  *
  * @ORM\Table(name="localidad")
- * @ORM\Entity(repositoryClass="MainBundle\Repository\Entity\LocalidadRepository")
+ * @ORM\Entity(repositoryClass="MainBundle\Repository\LocalidadRepository")
  */
 class Localidad
 {

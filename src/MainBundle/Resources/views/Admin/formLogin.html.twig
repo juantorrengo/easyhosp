@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Ingresar</h4>
+</div>
+<div class="modal-body">
+    <form id="formLogin" class="form-inline" action="{{ path('admin') }}" method="POST">
+        <div class="form-group row">
+            <div class="col-sm-7">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Nombre Usuario" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-7">
+                <input type="text" class="form-control" name="password" id="password" placeholder="Contraseña" />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="aceptarLogin" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+
+<script type="text/javascript">
+        $('#aceptarLogin').on('click', function (event) {
+            event.preventDefault();
+            $('#formLogin').submit();
+        });
+</script>
+
+

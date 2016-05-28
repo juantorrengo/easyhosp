@@ -1,0 +1,27 @@
+<div class="table-responsive col-lg-9">
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Nombre</th>
+            <th>Acciones</th>
+        </tr>
+        {% for tipo in tipos %}
+            <tr>
+                <td><b>{{ tipo.nombre }}</b></td>
+                <td>
+                    <a href="#" data-path="{{ path('admin') }}" class="btn btn-sm btn-info btnVerTipoHosp">
+                        Ver
+                        <input type="hidden" class="idTipo" value="{{ tipo.id }}">
+                    </a>
+                        <a href="#" data-path="{{ path('tiposEdit', { 'id': 'x'}) }}" class="btnEditTipoHosp btn btn-sm btn-primary">
+                        Editar
+                        <input type="hidden" class="idTipo" value="{{ tipo.id }}">
+                    </a>
+                    <a href="#" data-path="{{ path('tiposMsjDelete', { 'id': 'x'}) }}" class="btnDeleteTipoHosp btn btn-sm btn-danger btn-delete">
+                        Eliminar
+                        <input type="hidden" class="idTipo" value="{{ tipo.id }}">
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
