@@ -22,7 +22,7 @@ class SecurityController extends Controller
             $username = $request->get('username');
             $password = $request->get('password');
             $em = $this->getDoctrine()->getManager();
-            $user = $this->getDoctrine()->getRepository($this->repositorio)->findOneBy(array("email"=>$username, "password"=>$password));
+            $user = $em->getRepository($this->repositorio)->findOneBy(array("email"=>$username, "password"=>$password));
             if($user){
                 $session = $request->getSession();
                 $session->set('id', $user->getId());
@@ -125,14 +125,6 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/serPremium", name="serPremium")
-     */
-    public function serPremiumAction()
-    {
-        return $this->render('MainBundle:Admin:formPremium.html.twig');
-    }
-
-    /**
      * @Route("/serPremiumConfirm", name="serPremiumConfirm")
      */
     public function serPremiumConfirmAction(Request $request)
@@ -201,6 +193,22 @@ class SecurityController extends Controller
             $condicion = false;
         }
         return $condicion;
+    }
+
+    /**
+     * @Route("/serPremium", name="serPremium")
+     */
+    public function serPremiumAction()
+    {
+        return $this->render('MainBundle:Admin:formPremium.html.twig');
+    }
+
+    /**
+     * @Route("/recuperarClave", name="recuperarClave")
+     */
+    public function recuperarClaveAction()
+    {
+        return $this->render('MainBundle:Admin:formRecuperar.html.twig');
     }
 
 
