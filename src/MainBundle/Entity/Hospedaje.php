@@ -37,9 +37,9 @@ class Hospedaje
     private $descripcion;
 
     /**
-     * @var \DateTime
+     * @var \Date
      *
-     * @ORM\Column(name="fechaPublicacion", type="datetime")
+     * @ORM\Column(name="fechaPublicacion", type="date")
      */
     private $fechaPublicacion;
 
@@ -173,7 +173,7 @@ class Hospedaje
     /**
      * Set fechaPublicacion
      *
-     * @param \DateTime $fechaPublicacion
+     * @param \Date $fechaPublicacion
      *
      * @return Hospedaje
      */
@@ -187,7 +187,7 @@ class Hospedaje
     /**
      * Get fechaPublicacion
      *
-     * @return \DateTime
+     * @return \Date
      */
     public function getFechaPublicacion()
     {

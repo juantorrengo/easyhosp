@@ -65,6 +65,52 @@ class Usuario
     private $password;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="dni", type="string", length=255, nullable=true)
+     */
+    private $dni;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="respuestaSeguridad", type="string", length=255, nullable=true)
+     */
+    private $respuestaSeguridad;
+
+    /**
+     * @return string
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRespuestaSeguridad()
+    {
+        return $this->respuestaSeguridad;
+    }
+
+    /**
+     * @param string $respuestaSeguridad
+     */
+    public function setRespuestaSeguridad($respuestaSeguridad)
+    {
+        $this->respuestaSeguridad = $respuestaSeguridad;
+    }
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="isPremium", type="integer", length=1,  options={"default" = 0})

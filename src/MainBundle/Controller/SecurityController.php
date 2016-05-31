@@ -32,7 +32,9 @@ class SecurityController extends Controller
                 $session->set('email', $user->getEmail());
                 $session->set('isPremium', $user->getIsPremium());
                 $session->set('isAdmin', $user->getIsAdmin());
-                return $this->adminAction($request);
+                /*$em = $this->getDoctrine()->getManager();
+                $hospedajes = $this->getDoctrine()->getRepository('MainBundle:Hospedaje')->findByUsuario($user->getId());*/
+                return $this->render('MainBundle:Default:index.html.twig');
             }else{
                 $this->get('session')->getFlashBag()->add('error', 'Nombre de usuario o contraseña incorrectos');
                 return $this->render('MainBundle:Security:login.html.twig');
@@ -145,12 +147,11 @@ class SecurityController extends Controller
                 $usuario->setisPremium(1);
                 $em->persist($usuario);
                 $em->flush();
-                $session = $request->getSession();
-                $session->clear();
+                $request->getSession()->set('isPremium', 1);
                 $this->get('session')->getFlashBag()->add('success', 'La categoría se cambió correctemente, ahora podés disfrutar de ser Premium!');
-                return $this->render('MainBundle:Security:login.html.twig');
+                return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
             }else{
-                $this->get('session')->getFlashBag()->add('error', 'Error al intentar cambiar dfe categoría, intente nuevamente.');
+                $this->get('session')->getFlashBag()->add('error', 'Error al intentar cambiar de categoría, intente nuevamente.');
                 return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
             }
         }catch (ORMException $e){
@@ -176,9 +177,8 @@ class SecurityController extends Controller
                 $em->persist($usuario);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'La contraseña fue cambiada correctamente.');
-                $session = $request->getSession();
-                $session->clear();
-                return $this->render('MainBundle:Security:login.html.twig');
+                $request->getSession()->set('pass', $request->get('password'));
+                return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
             }else{
                 $this->get('session')->getFlashBag()->add('error', 'Error al cambiar la contraseña, intente nuevamente.');
                 return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
