@@ -1,0 +1,135 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 class="modal-title">Cambiar Contraseña</h3>
+</div>
+<div class="modal-body">
+    <div class="page-header">
+        <p style="font-style:oblique"><strong>Los datos deben ser los mismos figuran en la tarjeta de crédito.</strong></p>
+        <p style="font-style:oblique"><strong>Al Cambiar la contraseña se cerrará la sesión.</strong></p>
+        <p style="font-style:oblique; color: red;">Los datos con * son obligatorios.</p>
+    </div>    
+    <form action="{{ path('serPremiumConfirm') }}" id="formPremiumUser" method="POST">
+        <input type="hidden" name="id" value="{{ app.session.get('id') }}">
+        <input type="hidden" id="verifiPass" value="{{ app.session.get('pass') }}">
+        <div class="form-group">
+            <label>N° Tarjeta*</label>
+            <input type="text" name="numero" class="form-control" placeholder="Número de tarjeta" required autofocus>
+        </div>
+        <div class="form-inline">
+            <div class="form-group" style="width: 30%">
+                <label>Expiry Month*</label>
+                <input style="width: 35%;" type="text" name="mes" class="form-control" placeholder="MM" required autofocus>
+            </div>
+            <div class="form-group" style="width: 30%">
+                <label>Expiry Year*</label>
+                <input style="width: 35%;" type="text" name="year" class="form-control" placeholder="YY" required autofocus>
+            </div>
+            <div class="form-group" style="width: 30%">
+                <label>CCV*</label>
+                <input style="width: 35%;" type="text" name="ccv" class="form-control" placeholder="CCV" required autofocus>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Nombre*</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Contraseña actual*</label>
+            <input type="password" name="passActual" id="passActual" placeholder="Contraseña actual" class="form-control" autofocus>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="aceptarSerPremium" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#formPremiumUser').validate({
+            rules: {
+                passActual: {
+                    required: true,
+                    equalTo: "#verifiPass"
+                },
+                nombre: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 20
+                },
+                mes: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 2,
+                    digits: true
+                },
+                year: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 2,
+                    digits: true
+                },
+                ccv: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 3,
+                    digits: true
+                },
+                numero: {
+                    required: true,
+                    minlength: 16,
+                    maxlength: 16,
+                    digits: true
+                },
+            },
+            messages: {
+                passActual: {
+                    required: "La contraseña actual es requerida.",
+                    equalTo: "La contraseña actual es incorrecta."
+                },
+                nombre: {
+                    required: "El nombre es requerido.",
+                    minlength: "Debe tener al menos de {0} caracteres.",
+                    maxlength: "No puede tener más de {0} caracteres.",
+                },
+                ccv: {
+                    required: "El código de seguridad es obligatorio.",
+                    minlength: "Debe tener {0} caracteres numéricos.",
+                    maxlength: "Debe tener {0} caracteres numéricos.",
+                    digits: "Solo se permiten caracteres numéricos."
+                },
+                mes: {
+                    required: "El mes de vencimiento es obligatorio.",
+                    minlength: "Debe tener {0} caracteres numéricos.",
+                    maxlength: "Debe tener {0} caracteres numéricos.",
+                    digits: "Solo se permiten caracteres numéricos."
+                },
+                year: {
+                    required: "El año de vencimiento es obligatorio.",
+                    minlength: "Debe tener {0} caracteres numéricos.",
+                    maxlength: "Debe tener {0} caracteres numéricos.",
+                    digits: "Solo se permiten caracteres numéricos."
+                },
+                numero: {
+                    required: "El número de tarjeta es obligatorio.",
+                    minlength: "Debe tener {0} caracteres numéricos.",
+                    maxlength: "Debe tener {0} caracteres numéricos.",
+                    digits: "Solo se permiten caracteres numéricos."
+                }
+            }
+        });
+
+        $('#aceptarSerPremium').on('click', function (event) {
+            event.preventDefault();
+            if($('#formPremiumUser').valid()){
+                $('#formPremiumUser').submit();
+            }
+        });
+    });
+</script>
+

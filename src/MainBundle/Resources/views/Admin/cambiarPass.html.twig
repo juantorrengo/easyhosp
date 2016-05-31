@@ -1,0 +1,81 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Cambiar Contraseña</h4>
+    <span style="font-style:oblique"><strong>Al Cambiar la contraseña se cerrará la sesión.</strong></span>
+</div>
+<div class="modal-body">
+    <form action="{{ path('changePassConfirm') }}" id="formPassUser" method="POST">
+        <input type="hidden" name="id" value="{{ app.session.get('id') }}">
+        <input type="hidden" id="verifiPass" value="{{ app.session.get('pass') }}">
+        <div class="form-group">
+            <label>Contraeña nueva</label>
+            <input type="password" name="password" id="password" class="form-control" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Repetir contraseña nueva</label>
+            <input type="password" name="passwordRep" id="passwordRep" class="form-control" required autofocus>
+        </div>
+        <div class="form-group">
+            <label>Contraseña actual</label>
+            <input type="password" name="passActual" id=passActual class="form-control" autofocus>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="aceptarChangePass" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#formPassUser').validate({
+            rules: {
+                passActual: {
+                    required: true,
+                    equalTo: "#verifiPass"
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 10
+                },
+                passwordRep: {
+                    required: true,
+                    equalTo: "#password",
+                    minlength: 6,
+                    maxlength: 10
+                }
+            },
+            messages: {
+                passActual: {
+                    required: "La contraseña actual es requerida",
+                    equalTo: "La contraseña actual es incorrecta"
+                },
+                password: {
+                    required: "La contraseña es requerida",
+                    minlength: "Debe tener al menos de {0} caracteres",
+                    maxlength: "No puede tener más de {0} caracteres"
+                },
+                passwordRep: {
+                    required: "La contraseña es requerida",
+                    equalTo: "Debe coincidir con la anterior",
+                    minlength: "Debe tener al menos de {0} caracteres",
+                    maxlength: "Debe tener como máximo 10 caracteres"
+                }
+            }
+        });
+
+        $('#aceptarChangePass').on('click', function (event) {
+            event.preventDefault();
+            if($('#formPassUser').valid()){
+                $('#formPassUser').submit();
+            }
+        });
+    });
+</script>
+

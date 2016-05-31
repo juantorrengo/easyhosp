@@ -91,7 +91,6 @@ class TipoHospedajeController extends Controller
             $em = $this->getDoctrine()->getManager();
             $nombre = $request->get('nombre');
             $existe = $em->getRepository($this->repositorio)->findOneByNombre($nombre);
-            $em = $this->getDoctrine()->getManager();
             if(!$existe) {
                 $tipo = new TipoHospedaje();
                 $tipo->setNombre($request->get('nombre'));

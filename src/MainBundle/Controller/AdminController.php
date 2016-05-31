@@ -2,25 +2,26 @@
 
 namespace MainBundle\Controller;
 
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class AdminController extends Controller
 {
+    private $repositorio = 'MainBundle:Usuario';
+    
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/miCuenta", name="miCuenta")
      */
-    public function adminAction()
+    public function miCuentaAction()
     {
-        return $this->render('MainBundle:Admin:index.html.twig');
-    }
-
-    /**
-     * @Route("/login", name="login")
-     */
-    public function loginAction()
-    {
-        return $this->render('MainBundle:Admin:formLogin.html.twig');
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository($this->repositorio());
+        }catch (ORMException $e){
+            
+        }
+        return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$user));
     }
 
 }

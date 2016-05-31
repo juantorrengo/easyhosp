@@ -65,7 +65,7 @@ class Hospedaje
     private $capacidad;
 
     /**
-     * @ORM\ManyToOne(targetEntity="tipoHospedaje", inversedBy="hospedajes")
+     * @ORM\ManyToOne(targetEntity="TipoHospedaje", inversedBy="hospedajes")
      * @ORM\JoinColumn(name="tipohospedaje_id", referencedColumnName="id")
      */
     protected $tipohospedaje;

@@ -8,11 +8,7 @@
             <tr>
                 <td><b>{{ tipo.nombre }}</b></td>
                 <td>
-                    <a href="#" data-path="{{ path('admin') }}" class="btn btn-sm btn-info btnVerTipoHosp">
-                        Ver
-                        <input type="hidden" class="idTipo" value="{{ tipo.id }}">
-                    </a>
-                        <a href="#" data-path="{{ path('tiposEdit', { 'id': 'x'}) }}" class="btnEditTipoHosp btn btn-sm btn-primary">
+                    <a href="#" data-path="{{ path('tiposEdit', { 'id': 'x'}) }}" class="btnEditTipoHosp btn btn-sm btn-primary">
                         Editar
                         <input type="hidden" class="idTipo" value="{{ tipo.id }}">
                     </a>
