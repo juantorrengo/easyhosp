@@ -194,6 +194,7 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Admin:formRecuperar.html.twig');
     }
+
     /**
      * @Route("/recuperarContraseña", name="recuperarContraseña")
      */
@@ -201,6 +202,7 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Admin:formRecuperar.html.twig');
     }
+
     /**
      * @Route("/recuperarConstraseñaConfirm", name="recuperarConstraseñaConfirm")
      */
