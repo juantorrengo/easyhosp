@@ -49,6 +49,9 @@ class UsuarioController extends Controller
                 $usuario->setEmail($request->get('email'));
                 $usuario->setDireccion($request->get('direccion'));
                 $usuario->setTelefono($request->get('telefono'));
+                $usuario->setDni($request->get('dni'));
+                $usuario->setPreguntaSeguridad($request->get('pregunta'));
+                $usuario->setRespuestaSeguridad($request->get('respuesta'));
                 $usuario->setIsAdmin(0);
                 $usuario->setIsPremium(0);
                 $em = $this->getDoctrine()->getManager();

@@ -42,6 +42,23 @@
                         <label>Teléfono</label>
                         <input type="tel" name="telefono" class="form-control" value="{{ user.telefono }}" required autofocus>
                     </div>
+                    <div class="form-group">
+                        <label>Dni</label>
+                        <input type="dni" name="dni" class="form-control" value="{{ user.dni }}" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label>Pregunta</label>
+                        <select class="form-control" name="pregunta" value="{{ user.preguntaSeguridad }}">
+                            <option value="">Elige una pregunta</option>
+                            <option value="Lugar de nacimiento" {% if user.preguntaSeguridad == "Lugar de nacimiento" %}  selected="selected"  {% endif %} >¿Lugar de nacimiento?</option>
+                            <option value="Apellido de soltera de tu madre" {% if user.preguntaSeguridad == "Apellido de soltera de tu madre" %}  selected="selected"  {% endif %}>¿Cuál es el apellido de soltera de tu madre?</option>
+                            <option value="Nombre de tu primera mascota" {% if user.preguntaSeguridad == "Nombre de tu primera mascota" %}  selected="selected"  {% endif %}>¿Nombre de tu primera mascota?</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Respuesta</label>
+                        <input type="text" name="respuesta" class="form-control" value="{{ user.respuestaSeguridad }}" required autofocus>
+                    </div>
                     <div class="form-group" id="passwordActInput">
                         <label>Contraseña actual</label>
                         <input type="hidden" name="checkPassAct" id="checkPassAct" value="{{ user.password }}">

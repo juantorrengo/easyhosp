@@ -79,6 +79,13 @@ class Usuario
     private $respuestaSeguridad;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="preguntaSeguridad", type="string", length=255, nullable=true)
+     */
+    private $preguntaSeguridad;
+
+    /**
      * @return string
      */
     public function getDni()
@@ -92,6 +99,22 @@ class Usuario
     public function setDni($dni)
     {
         $this->dni = $dni;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreguntaSeguridad()
+    {
+        return $this->preguntaSeguridad;
+    }
+
+    /**
+     * @param string $preguntaSeguridad
+     */
+    public function setPreguntaSeguridad($preguntaSeguridad)
+    {
+        $this->preguntaSeguridad = $preguntaSeguridad;
     }
 
     /**
