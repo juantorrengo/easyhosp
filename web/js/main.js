@@ -221,6 +221,13 @@ $(document).ready(function() {
         })
     });
 
+    $('#recuperarContraseña').on('click', function () {
+        var url = $(this).attr('data-path');
+        $('#modal-form').find('.modal-content').load(url, function () {
+            $('#modal-form').modal();
+        })
+    });
+
     $('#aceptarNuevoRegistro').on('click', function (event) {
         event.preventDefault();
         if($('#formRegistro').valid()){

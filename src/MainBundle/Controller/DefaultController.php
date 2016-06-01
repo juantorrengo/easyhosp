@@ -5,7 +5,6 @@ namespace MainBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
-use MainBundle\Form\TipoHospedajeType;
 use MainBundle\Entity\TipoHospedaje;
 use Symfony\Component\HttpFoundation\Request;
 

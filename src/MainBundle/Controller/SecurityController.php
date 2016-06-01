@@ -1,18 +1,14 @@
 <?php
-
 namespace MainBundle\Controller;
-
 use Doctrine\ORM\ORMException;
 use MainBundle\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
-
 class SecurityController extends Controller
 {
     private $repositorio = 'MainBundle:Usuario';
-
     /**
      * @Route("/admin", name="checkLogin")
      */
@@ -44,7 +40,6 @@ class SecurityController extends Controller
             return $this->render('MainBundle:Security:login.html.twig');
         }
     }
-
     /**
      * @Route("/login", name="login")
      */
@@ -52,7 +47,6 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Security:login.html.twig');
     }
-
     /**
      * @Route("/registrarse", name="registrarse")
      */
@@ -60,7 +54,6 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Security:register.html.twig');
     }
-
     /**
      * @Route("/saveRegistro", name="saveRegistro")
      */
@@ -86,7 +79,7 @@ class SecurityController extends Controller
                 creado correctamente.');
                 return $this->render('MainBundle:Security:login.html.twig');
             }else{
-                $this->get('session')->getFlashBag()->add('error', 'El usuario con el email '.$request->get('email').' ya se 
+                $this->get('session')->getFlashBag()->add('error', 'El usuario con el email '.$request->get('email').' ya se
                 ecuentra registrado en el sistema.');
                 return $this->render('MainBundle:Security:login.html.twig');
             }
@@ -95,7 +88,6 @@ class SecurityController extends Controller
             return $this->render('MainBundle:Security:login.html.twig');
         }
     }
-
     /**
      * @Route("/logout", name="logout")
      */
@@ -104,7 +96,6 @@ class SecurityController extends Controller
         $session->clear();
         return $this->render('MainBundle:Default:index.html.twig');
     }
-
     /**
      * @Route("/indexAdmin", name="admin")
      */
@@ -117,7 +108,6 @@ class SecurityController extends Controller
             return $this->render('MainBundle:Default:index.html.twig');
         }
     }
-
     /**
      * @Route("/changePass", name="changePass")
      */
@@ -125,7 +115,6 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Admin:cambiarPass.html.twig');
     }
-
     /**
      * @Route("/serPremiumConfirm", name="serPremiumConfirm")
      */
@@ -154,7 +143,6 @@ class SecurityController extends Controller
             return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
         }
     }
-
     /**
      * @Route("/changePassConfirm", name="changePassConfirm")
      */
@@ -183,8 +171,6 @@ class SecurityController extends Controller
             return $this->render('MainBundle:Admin:micuenta.html.twig', array('user'=>$usuario));
         }
     }
-
-
     private function checkSession(Request $request){
         $session = $request->getSession();
         if($session->has("id")){
@@ -194,7 +180,6 @@ class SecurityController extends Controller
         }
         return $condicion;
     }
-
     /**
      * @Route("/serPremium", name="serPremium")
      */
@@ -202,13 +187,38 @@ class SecurityController extends Controller
     {
         return $this->render('MainBundle:Admin:formPremium.html.twig');
     }
-
     /**
      * @Route("/recuperarClave", name="recuperarClave")
      */
     public function recuperarClaveAction()
     {
         return $this->render('MainBundle:Admin:formRecuperar.html.twig');
+    }
+
+    /**
+     * @Route("/recuperarContraseña", name="recuperarContraseña")
+     */
+    public function recuperarContraseñaAction()
+    {
+        return $this->render('MainBundle:Admin:formRecuperar.html.twig');
+    }
+
+    /**
+     * @Route("/recuperarConstraseñaConfirm", name="recuperarConstraseñaConfirm")
+     */
+    public function recuperarConstraseñaConfirmAction(Request $request)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $existe = $em->getRepository($this->repositorio)->findOneByEmail($request->get('email'));
+            if (!$existe){
+                $this->get('session')->getFlashBag()->add('error', 'No existe el usuario con el email '.$request->get('email'));
+                return $this->render('MainBundle:Security:login.html.twig');
+            }
+        }catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error inesperado, intente nuevamente.');
+            return $this->render('MainBundle:Security:login.html.twig');
+        }
     }
 
 
