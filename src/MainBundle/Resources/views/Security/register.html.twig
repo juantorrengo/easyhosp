@@ -26,6 +26,18 @@
                     <input type="tel" name="telefono" class="form-control" required autofocus>
                 </div>
                 <div class="form-group">
+                    <label>Pregunta Secreta</label>
+                    <select class="form-control" name="pregunta" required autofocus>
+                        {% for pregunta in preguntas %}
+                            <option value="{{ pregunta.id }}">{{ pregunta.pregunta }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Respuesta</label>
+                    <input type="text" name="respuesta" class="form-control" required autofocus>
+                </div>
+                <div class="form-group">
                     <label>Contraseña</label>
                     <input type="password" name="password" id="password" class="form-control" required autofocus>
                 </div>

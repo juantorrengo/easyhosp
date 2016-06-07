@@ -24,12 +24,4 @@ class TipoHospedajeRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter(':nombre', $nombre)
             ->getOneOrNullResult();
     }
-
-    public function findHospedajesForTipo($id) {
-        $dql = 'SELECT p.titulo FROM MainBundle:Hospedaje p WHERE p.tipohospedaje = :id';
-        return $this->getEntityManager()
-            ->createQuery($dql)
-            ->setParameter(':id', $id)
-            ->getOneOrNullResult();
-    }
 }

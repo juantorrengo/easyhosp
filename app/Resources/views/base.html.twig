@@ -5,11 +5,11 @@
 {% block navbar %}
     {% include 'common_navbar.html.twig' %}
 {% endblock %}
-{% include 'MainBundle:Utils:alerts.html.twig' %}
 {% block slider %}
     {% include 'slider.html.twig' %}
 {% endblock %}
     <div class="container">
+        {% include 'MainBundle:Utils:alerts.html.twig' %}
         {% block content %} {% endblock %}
         {% include 'common_footer.html.twig' %}
     </div>

@@ -24,6 +24,29 @@
     width: 200px;
 }
 
+#form-recuPass label.error {
+    color:#FB3A3A;
+    font-weight:100;
+    font-style: italic;
+    font-size: 14px;
+    width: 200px;
+}
+#formNewPassRecuperada label.error {
+    color:#FB3A3A;
+    font-weight:100;
+    font-style: italic;
+    font-size: 14px;
+    width: 200px;
+}
+
+#formRecuperarPass label.error {
+    color:#FB3A3A;
+    font-weight:100;
+    font-style: italic;
+    font-size: 14px;
+    width: 200px;
+}
+
 #formRegistro label.error {
     color:#FB3A3A;
     font-weight:100;
@@ -129,4 +152,48 @@
 {
     display: block;
     margin-top: 10px;
+}
+
+.paginador{
+    width: 99% !important;
+}
+
+.cantResultPag{
+    float: right;
+    margin-top: 20px;
+    font-size: 12px;
+    text-decoration: underline;
+}
+
+.disabled{
+    cursor: no-drop;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.selected{
+    background-color: #ddd !important;
+}
+
+.beGrey{
+    background-color: #f8f8f8;
+}
+
+.dl-horizontal>dt{
+    margin-bottom: 5px;
+}
+
+.beBlue{
+    color: #09406f;
+}
+
+.oblique{
+    font-style: oblique;
+}
+
+.searchHosp{
+    font-size: 14px;
+    margin-top: 1%;
 }

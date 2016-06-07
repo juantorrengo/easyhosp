@@ -1,6 +1,7 @@
 <?php
 namespace MainBundle\Controller;
 use Doctrine\ORM\ORMException;
+use MainBundle\Entity\PreguntaSeguridad;
 use MainBundle\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,9 +29,9 @@ class SecurityController extends Controller
                 $session->set('email', $user->getEmail());
                 $session->set('isPremium', $user->getIsPremium());
                 $session->set('isAdmin', $user->getIsAdmin());
-                /*$em = $this->getDoctrine()->getManager();
-                $hospedajes = $this->getDoctrine()->getRepository('MainBundle:Hospedaje')->findByUsuario($user->getId());*/
-                return $this->render('MainBundle:Default:index.html.twig');
+                $em = $this->getDoctrine()->getManager();
+                $hospedajes = $this->getDoctrine()->getRepository('MainBundle:Hospedaje')->findByUsuario($user->getId());
+                return DefaultController::indexAction(1);
             }else{
                 $this->get('session')->getFlashBag()->add('error', 'Nombre de usuario o contraseña incorrectos');
                 return $this->render('MainBundle:Security:login.html.twig');
@@ -52,7 +53,9 @@ class SecurityController extends Controller
      */
     public function registrarseAction()
     {
-        return $this->render('MainBundle:Security:register.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $preguntas = $em->getRepository('MainBundle:PreguntaSeguridad')->findAll();
+        return $this->render('MainBundle:Security:register.html.twig', array('preguntas'=>$preguntas));
     }
     /**
      * @Route("/saveRegistro", name="saveRegistro")
@@ -70,6 +73,8 @@ class SecurityController extends Controller
                 $usuario->setDireccion($request->get('direccion'));
                 $usuario->setTelefono($request->get('telefono'));
                 $usuario->setPassword($request->get('password'));
+                $usuario->setPreguntaSecreta($request->get('pregunta'));
+                $usuario->setRespuestaSeguridad($request->get('respuesta'));
                 $usuario->setIsAdmin(0);
                 $usuario->setIsPremium(0);
                 $em = $this->getDoctrine()->getManager();
@@ -94,7 +99,7 @@ class SecurityController extends Controller
     public function logoutAction(Request $request) {
         $session = $request->getSession();
         $session->clear();
-        return $this->render('MainBundle:Default:index.html.twig');
+        return DefaultController::indexAction(1);
     }
     /**
      * @Route("/indexAdmin", name="admin")
@@ -196,24 +201,45 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/recuperarContraseña", name="recuperarContraseña")
+     * @Route("/recuperarPass/{email}", name="recuperarPass")
+     * @param $email
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function recuperarContraseñaAction()
-    {
-        return $this->render('MainBundle:Admin:formRecuperar.html.twig');
-    }
-
-    /**
-     * @Route("/recuperarConstraseñaConfirm", name="recuperarConstraseñaConfirm")
-     */
-    public function recuperarConstraseñaConfirmAction(Request $request)
+    public function recuperarPassAction($email)
     {
         try{
             $em = $this->getDoctrine()->getManager();
-            $existe = $em->getRepository($this->repositorio)->findOneByEmail($request->get('email'));
-            if (!$existe){
-                $this->get('session')->getFlashBag()->add('error', 'No existe el usuario con el email '.$request->get('email'));
+            $user = $em->getRepository('MainBundle:Usuario')->findOneByEmail($email);
+            if(!$user){
+                $array = array('status'=> 400, 'msg'=>'Usuario no encontrado');
+            }else{
+                $em = $this->getDoctrine()->getManager();
+                $pregunta = $em->getRepository('MainBundle:PreguntaSeguridad')->findOneById($user->getPreguntaSecreta());
+                return $this->render('MainBundle:Admin:formRecuperar.html.twig', array('pregunta'=>$pregunta, 'email' =>$user->getEmail()));
+            }
+        }catch (Exception $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        }
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+
+
+    /**
+     * @Route("/recuperarPassConfirm", name="recuperarPassConfirm")
+     */
+    public function recuperarPassConfirmAction(Request $request)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository($this->repositorio)->findOneBy(array('email'=>$request->get('email'), 'respuestaSeguridad'=>$request->get('respuesta')));
+            if (!$user){
+                $this->get('session')->getFlashBag()->add('error', 'La respuesta es incorrecta, intente nuevamente');
                 return $this->render('MainBundle:Security:login.html.twig');
+            }else{
+                return $this->render('MainBundle:Security:passRecuperada.html.twig', array('user'=>$user));
             }
         }catch (ORMException $e){
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, intente nuevamente.');
@@ -221,5 +247,28 @@ class SecurityController extends Controller
         }
     }
 
-
+    /**
+     * @Route("/savePassRecuperada", name="savePassRecuperada")
+     */
+    public function savePassRecuperadaAction(Request $request)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository($this->repositorio)->findOneById($request->get('userId'));
+            if (!$user){
+                $this->get('session')->getFlashBag()->add('error', 'Usuario no encontrado');
+                return $this->render('MainBundle:Security:login.html.twig');
+            }else{
+                $user->setPassword($request->get('password'));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'su contraseña ha sido modificada correctamente.');
+                return $this->render('MainBundle:Security:login.html.twig');
+            }
+        }catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error inesperado, intente nuevamente.');
+            return $this->render('MainBundle:Security:login.html.twig');
+        }
+    }
 }

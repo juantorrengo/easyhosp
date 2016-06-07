@@ -81,57 +81,17 @@ class Usuario
     /**
      * @var string
      *
-     * @ORM\Column(name="preguntaSeguridad", type="string", length=255, nullable=true)
+     * @ORM\Column(name="sexo", type="string", length=1, nullable=true)
      */
-    private $preguntaSeguridad;
+    private $sexo;
 
     /**
-     * @return string
+     * @var integer
+     *
+     * @ORM\Column(name="preguntaSecreta", type="integer", length=1,  options={"default" = 0})
      */
-    public function getDni()
-    {
-        return $this->dni;
-    }
+    private $preguntaSecreta;
 
-    /**
-     * @param string $dni
-     */
-    public function setDni($dni)
-    {
-        $this->dni = $dni;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPreguntaSeguridad()
-    {
-        return $this->preguntaSeguridad;
-    }
-
-    /**
-     * @param string $preguntaSeguridad
-     */
-    public function setPreguntaSeguridad($preguntaSeguridad)
-    {
-        $this->preguntaSeguridad = $preguntaSeguridad;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRespuestaSeguridad()
-    {
-        return $this->respuestaSeguridad;
-    }
-
-    /**
-     * @param string $respuestaSeguridad
-     */
-    public function setRespuestaSeguridad($respuestaSeguridad)
-    {
-        $this->respuestaSeguridad = $respuestaSeguridad;
-    }
 
     /**
      * @var integer
@@ -183,6 +143,55 @@ class Usuario
         $this->reservas = new ArrayCollection();
     }
 
+
+    /**
+     * @return string
+     */
+    public function getSexo()
+    {
+        return $this->sexo;
+    }
+
+    /**
+     * @param string $sexo
+     */
+    public function setSexo($sexo)
+    {
+        $this->sexo = $sexo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDni()
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @param string $dni
+     */
+    public function setDni($dni)
+    {
+        $this->dni = $dni;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getRespuestaSeguridad()
+    {
+        return $this->respuestaSeguridad;
+    }
+
+    /**
+     * @param string $respuestaSeguridad
+     */
+    public function setRespuestaSeguridad($respuestaSeguridad)
+    {
+        $this->respuestaSeguridad = $respuestaSeguridad;
+    }
 
     /**
      * @return int
@@ -539,5 +548,21 @@ class Usuario
     public function getFavoritos()
     {
         return $this->favoritos;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPreguntaSecreta()
+    {
+        return $this->preguntaSecreta;
+    }
+
+    /**
+     * @param int $preguntaSecreta
+     */
+    public function setPreguntaSecreta($preguntaSecreta)
+    {
+        $this->preguntaSecreta = $preguntaSecreta;
     }
 }

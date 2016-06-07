@@ -49,11 +49,12 @@ class UsuarioController extends Controller
                 $usuario->setEmail($request->get('email'));
                 $usuario->setDireccion($request->get('direccion'));
                 $usuario->setTelefono($request->get('telefono'));
-                $usuario->setDni($request->get('dni'));
-                $usuario->setPreguntaSeguridad($request->get('pregunta'));
-                $usuario->setRespuestaSeguridad($request->get('respuesta'));
-                $usuario->setIsAdmin(0);
-                $usuario->setIsPremium(0);
+                if($request->get('dni') != ""){
+                    $usuario->setDni($request->get('dni'));
+                }
+                if($request->get('sexo') != ""){
+                    $usuario->setSexo($request->get('sexo'));
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($usuario);
                 $em->flush();

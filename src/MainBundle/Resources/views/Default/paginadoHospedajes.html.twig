@@ -1,0 +1,26 @@
+<ul class="pagination paginador">
+    {% if prev > 0 %}
+        <li>
+            <a class="prevPageHosp pointer"><input type="hidden" id="pagAntHosp" value="{{ prev }}" />&laquo;</a>
+        </li>
+    {% else %}
+        <li><a class="disabled">&laquo;</a></li>
+    {% endif %}
+    {% for i in 1..pagesCount %}
+        {% if i == pagActual %}
+            <li><a class="choisedPageHosp pointer selected"><input type="hidden" id="pagElegHosp" value="{{ i }}" />{{ i }}</a></li>
+        {% else %}
+            <li><a class="choisedPageHosp pointer"><input type="hidden" id="pagElegHosp" value="{{ i }}" />{{ i }}</a></li>
+        {% endif %}
+    {% endfor %}
+    {% if next <= pagesCount %}
+        <li>
+            <a class="nextPageHosp pointer"><input type="hidden" id="pagSigHosp" value="{{ next }}" />&raquo;</a>
+        </li>
+    {% else %}
+        <li><a class="disabled">&raquo;</a></li>
+    {% endif %}
+    <li class="cantResultPag">
+        <strong>Resultados encontrados: {{ total }}</strong>
+    </li>
+</ul>

@@ -1,0 +1,35 @@
+<div class="hidden" id="hospIndexPath" data-path="{{ path('hospPaginated', { 'page': 'x'}) }}"></div>
+<div class="hidden" id="hospDetalleIndexPath" data-path="{{ path('detalleHosp', { 'id': 'x'}) }}"></div>
+<table class="table table-hover table-bordered">
+    <thead>
+    <tr class="beGrey">
+        <th></th>
+        <th>Título</th>
+        <th>Tipo</th>
+        <th>Localidad</th>
+        <th>Fecha publicación</th>
+        <th>Dirección</th>
+        <th>Precio (por día)</th>
+        <th>Capacidad</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for hospedaje in hospedajes %}
+        <tr>
+            <td></td>
+            <td>{{ hospedaje.titulo }}</td>
+            <td>{{ hospedaje.tipoHosp }}</td>
+            <td>{{ hospedaje.localidad }}</td>
+            <td>{{ hospedaje.fechaPublicacion|date('d-m-Y') }}</td>
+            <td>{{ hospedaje.direccion }}</td>
+            <td>${{ hospedaje.precio }}</td>
+            <td>{{ hospedaje.capacidad }} personas.</td>
+            <td><a class="btn btn-primary verDetalle" href="#" data-path="{{ hospedaje.id }}">Ver</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    {% include 'MainBundle:Default:paginadoHospedajes.html.twig' %}
+</div>

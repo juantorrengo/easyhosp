@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4" id="loginCard">
+        <div class="account-wall">
+            <h1 class="text-center login-title">Nueva contraseña</h1>
+            <form id="formNewPassRecuperada" action="{{ path('savePassRecuperada') }}" method="POST" class="form-signin">
+                <div class="form-group">
+                    <input type="hidden" name="userId" value="{{ user.id }}">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" id="passwordRecuperada" class="form-control" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label>Repetir contraseña</label>
+                    <input type="password" name="passwordRep" class="form-control" required autofocus>
+                </div>
+                <button id="aceptarRecuperarPass" class="btn btn-lg btn-primary btn-block" type="submit">
+                    Aceptar</button>
+            </form>
+        </div>
+    </div>
+</div>
+

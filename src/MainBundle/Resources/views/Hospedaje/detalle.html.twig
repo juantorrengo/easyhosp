@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="beBlue bigger"><strong>{{ hospedaje.titulo }}</strong></h4>
+</div>
+<div class="modal-body">
+    <dl class="dl-horizontal">
+        <dt>Descripción</dt>
+        <dd>{{ hospedaje.descripcion}}</dd>
+        <dt>Tipo</dt>
+        <dd>{{ hospedaje.tipoHosp}}</dd>
+        <dt>Localidad</dt>
+        <dd>{{ hospedaje.localidad}}</dd>
+        <dt>Fecha publicación</dt>
+        <dd>{{ hospedaje.fechaPublicacion|date('d-m-Y')}}</dd>
+        <dt>Dirección</dt>
+        <dd>{{ hospedaje.direccion}}</dd>
+        <dt>Capacidad</dt>
+        <dd>{{ hospedaje.capacidad}} personas.</dd>
+        <dt>Precio (Por día)</dt>
+        <dd>${{ hospedaje.precio}}</dd>
+        <dt>Dueño</dt>
+        <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
+
+    </dl>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cerrar
+    </button>
+</div>

@@ -3,14 +3,11 @@
     <h3 class="modal-title">Recuperar contraseña</h3>
 </div>
 <div class="modal-body">
-    <form action="{{ path('recuperarConstraseñaConfirm') }}" id="formRecuperarContraseña" method="POST">
+    <form action="{{ path('recuperarPassConfirm') }}" id="formRecuperarPass" method="POST">
         <div class="form-group">
-            <label>Email</label>
-            <input type="text" name="email" id="email" class="form-control" placeholder="Email" required autofocus>
-        </div>
-        <div class="form-group">
+            <input type="hidden" name="email" value="{{ email }}">
             <label>Pregunta secreta</label>
-            <input type="text" name="pregunta" id="pregunta" class="form-control" placeholder="Pregunta" required autofocus>
+            <input type="text" name="pregunta" id="pregunta" class="form-control" value="{{ pregunta.pregunta }}" disabled required >
         </div>
         <div class="form-group">
             <label>Respuesta</label>
@@ -19,7 +16,7 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button id="aceptarRecuperarContraseña" class="btn btn-small btn-primary">
+    <button id="aceptarRecuperarPass" class="btn btn-small btn-primary">
         <i class="icon-ok"></i>
         Aceptar
     </button>
@@ -30,10 +27,22 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#aceptarRecuperarContraseña').on('click', function (event) {
+        $('#formRecuperarPass').validate({
+            rules: {
+                respuesta: {
+                    required: true,
+                }
+            },
+            messages: {
+                respuesta: {
+                    required: "La respuesta es requerida"
+                }
+            }
+        });
+        $('#aceptarRecuperarPass').on('click', function (event) {
             event.preventDefault();
-            if($('#formRecuperarContraseña').valid()){
-                $('#formRecuperarContraseña').submit();
+            if($('#formRecuperarPass').valid()){
+                $('#formRecuperarPass').submit();
             }
         });
     });

@@ -146,18 +146,19 @@ class TipoHospedajeController extends Controller
         try{
             $idTipoDelete = $request->get('idTipo');
             $em = $this->getDoctrine()->getManager();
-            $tieneHospedajes = $em->getRepository($this->repositorio)->findHospedajesForTipo($idTipoDelete);
+            $tieneHospedajes = $em->getRepository('MainBundle:Hospedaje')->findOneByTipohospedaje($idTipoDelete);
             $em = $this->getDoctrine()->getManager();
             $tipoDelete = $em->getRepository($this->repositorio)->findOneById($idTipoDelete);
             if(!$tieneHospedajes){
                 $em->remove($tipoDelete);
                 $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipoDelete->getNombre().' fue eliminado correctamente.');
             }else{
                 $tipoDelete->setBorrado(1);
                 $em->persist($tipoDelete);
                 $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipoDelete->getNombre().' fue archivado ya que tiene hospedajes asociados.');
             }
-            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipoDelete->getNombre().' fue eliminado correctamente.');
             return $this->redirect($this->generateUrl('tipoHosp'));
         }catch (ORMException $e){
             $this->get('session')->getFlashBag()->add('error', 'Error al eliminar el tipo de hospedaje, intente nuevamente.');

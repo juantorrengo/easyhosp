@@ -23,46 +23,46 @@
                     <h1 class="text-center login-title">Mis Datos</h1>
                     <input type="hidden" name="idUsuario" value="{{ user.id }}">
                     <div class="form-group">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre" class="form-control" required autofocus value="{{ user.nombre }}">
+                        <label>Nombre*</label>
+                        <input type="text" name="nombre" class="form-control" required value="{{ user.nombre }}">
                     </div>
                     <div class="form-group">
-                        <label>Apellido</label>
-                        <input type="text" name="apellido" class="form-control" value="{{ user.apellido }}" required autofocus>
+                        <label>Apellido*</label>
+                        <input type="text" name="apellido" class="form-control" value="{{ user.apellido }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
+                        <label>Email*</label>
                         <input type="email" name="email" class="form-control" id="emailEdit" value="{{ user.email }}" disabled="disabled">
                     </div>
                     <div class="form-group">
-                        <label>Dirección</label>
-                        <input type="text" name="direccion" class="form-control" value="{{ user.direccion }}" required autofocus>
+                        <label>Dirección*</label>
+                        <input type="text" name="direccion" class="form-control" value="{{ user.direccion }}" required>
                     </div>
                     <div class="form-group">
-                        <label>Teléfono</label>
-                        <input type="tel" name="telefono" class="form-control" value="{{ user.telefono }}" required autofocus>
+                        <label>Teléfono*</label>
+                        <input type="tel" name="telefono" class="form-control" value="{{ user.telefono }}" required>
                     </div>
                     <div class="form-group">
                         <label>Dni</label>
-                        <input type="dni" name="dni" class="form-control" value="{{ user.dni }}" required autofocus>
+                        <input type="dni" name="dni" class="form-control" value="{{ user.dni }}">
                     </div>
                     <div class="form-group">
-                        <label>Pregunta</label>
-                        <select class="form-control" name="pregunta" value="{{ user.preguntaSeguridad }}">
-                            <option value="">Elige una pregunta</option>
-                            <option value="Lugar de nacimiento" {% if user.preguntaSeguridad == "Lugar de nacimiento" %}  selected="selected"  {% endif %} >¿Lugar de nacimiento?</option>
-                            <option value="Apellido de soltera de tu madre" {% if user.preguntaSeguridad == "Apellido de soltera de tu madre" %}  selected="selected"  {% endif %}>¿Cuál es el apellido de soltera de tu madre?</option>
-                            <option value="Nombre de tu primera mascota" {% if user.preguntaSeguridad == "Nombre de tu primera mascota" %}  selected="selected"  {% endif %}>¿Nombre de tu primera mascota?</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Respuesta</label>
-                        <input type="text" name="respuesta" class="form-control" value="{{ user.respuestaSeguridad }}" required autofocus>
+                        <p style="font-weight: 700">Sexo</p>
+                        {% if user.sexo == null %}
+                            <label class="radio-inline"><input type="radio" name="sexo" value="M">M</label>
+                            <label class="radio-inline"><input type="radio" name="sexo" value="F">F</label>
+                        {% elseif(user.sexo == 'M') %}
+                            <label class="radio-inline"><input type="radio" name="sexo" value="M" checked>M</label>
+                            <label class="radio-inline"><input type="radio" name="sexo" value="F">F</label>
+                        {% elseif(user.sexo == 'F')%}
+                            <label class="radio-inline"><input type="radio" name="sexo" value="M">M</label>
+                            <label class="radio-inline"><input type="radio" name="sexo" value="F" checked>F</label>
+                        {% endif %}
                     </div>
                     <div class="form-group" id="passwordActInput">
-                        <label>Contraseña actual</label>
+                        <label>Contraseña actual*</label>
                         <input type="hidden" name="checkPassAct" id="checkPassAct" value="{{ user.password }}">
-                        <input type="password" name="contActual" id="contActual" class="form-control" required autofocus>
+                        <input type="password" name="contActual" id="contActual" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <button id="aceptarEditarUsuario" class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Aceptar</button>

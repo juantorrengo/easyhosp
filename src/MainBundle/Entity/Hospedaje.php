@@ -50,6 +50,14 @@ class Hospedaje
      */
     private $direccion;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="localidad", type="string", length=255)
+     */
+    private $localidad;
+
     /**
      * @var int
      *
@@ -95,12 +103,6 @@ class Hospedaje
      * @ORM\OneToMany(targetEntity="Favorito", mappedBy="hospedaje")
      */
     protected $favoritos;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Localidad", inversedBy="hospedajes")
-     * @ORM\JoinColumn(name="localidad_id", referencedColumnName="id")
-     */
-    protected $localidad;
 
 
     public function __construct()
@@ -451,26 +453,18 @@ class Hospedaje
     }
 
     /**
-     * Set localidad
-     *
-     * @param \MainBundle\Entity\Localidad $localidad
-     *
-     * @return Hospedaje
-     */
-    public function setLocalidad(\MainBundle\Entity\Localidad $localidad = null)
-    {
-        $this->localidad = $localidad;
-
-        return $this;
-    }
-
-    /**
-     * Get localidad
-     *
-     * @return \MainBundle\Entity\Localidad
+     * @return string
      */
     public function getLocalidad()
     {
         return $this->localidad;
+    }
+
+    /**
+     * @param string $localidad
+     */
+    public function setLocalidad($localidad)
+    {
+        $this->localidad = $localidad;
     }
 }
