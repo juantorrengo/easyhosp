@@ -4,6 +4,7 @@ namespace MainBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Hospedaje
@@ -42,6 +43,13 @@ class Hospedaje
      * @ORM\Column(name="fechaPublicacion", type="date")
      */
     private $fechaPublicacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="borrado", type="integer", length=1,  options={"default" = 0})
+     */
+    private $borrado;
 
     /**
      * @var string
@@ -467,4 +475,21 @@ class Hospedaje
     {
         $this->localidad = $localidad;
     }
+
+    /**
+     * @return int
+     */
+    public function getBorrado()
+    {
+        return $this->borrado;
+    }
+
+    /**
+     * @param int $borrado
+     */
+    public function setBorrado($borrado)
+    {
+        $this->borrado = $borrado;
+    }
+
 }

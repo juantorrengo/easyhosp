@@ -346,6 +346,16 @@ $(document).ready(function() {
         }
     });
 
+    //MIS PUBLICACIONES
+
+    $('#btnNuevoHosp').on('click', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('data-path');
+        $('#modal-form').find('.modal-content').load(url, function () {
+            $('#modal-form').modal();
+        });
+    });
+
     //TIPO HOSPEDAJE
 
     $('#btnNuevoTipo').on('click', function (e) {
@@ -500,6 +510,56 @@ $(document).ready(function() {
                 }else{
                     $('#modal-form').find('.modal-content').html(data);
                     $('#modal-form').modal();
+                }
+            }
+        });
+    });
+
+    function marcarFav(elem){
+        elem.addClass('unmarkFav');
+        elem.addClass('fa-star');
+        elem.removeClass('fa-star-o');
+        elem.removeClass('markFav');
+    }
+
+    function desmarcarFav(elem){
+        elem.removeClass('fa-star');
+        elem.removeClass('unmarkFav');
+        elem.addClass('fa-star-o');
+        elem.addClass('markFav');
+    }
+    
+    tablaHospedajes.on('click', '.markFav', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var hospId = self.attr('data-ref');
+        var url = $('#marcarFavPath').attr('data-path');
+        url = url.replace('x', hospId);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    $('#ajaxAlerts').find('.close').next().html(data.msg);
+                }else{
+                    marcarFav(self);
+                }
+            }
+        });
+    });
+
+    tablaHospedajes.on('click', '.unmarkFav', function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var hospId = self.attr('data-ref');
+        var url = $('#desmarcarFavPath').attr('data-path');
+        url = url.replace('x', hospId);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    $('#ajaxAlerts').find('.close').next().html(data.msg);
+                }else{
+                    desmarcarFav(self);
                 }
             }
         });

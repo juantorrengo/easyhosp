@@ -28,25 +28,9 @@
             <td>${{ hospedaje.precio }}</td>
             <td>{{ hospedaje.capacidad }} personas.</td>
             <td><a class="btn btn-primary verDetalle" href="#" data-path="{{ hospedaje.id }}">Ver</a>
-                {% if app.session.get('id') != "" %}
-                    {% set count = 0 %}
-                    {% for favorito in favoritos %}
-                        {% if favorito.hospedaje.id == hospedaje.id %}
-                            <i class="fa fa-star fa-lg unmarkFav" data-ref="{{ hospedaje.id }}" title="Favorito" aria-hidden="true"></i>
-                            {% set count = count + 1 %}
-                        {% endif %}
-                    {% endfor %}
-                    {% if count == 0 %}
-                        <i class="fa fa-star-o fa-lg markFav" data-ref="{{ hospedaje.id }}" title="Favorito" aria-hidden="true"></i>
-                    {% endif %}
-
-                {% endif %}
+            <i class="fa fa-star fa-lg unmarkFav" data-ref="{{ hospedaje.id }}" title="Favorito" aria-hidden="true"></i>
             </td>
-
         </tr>
     {% endfor %}
     </tbody>
 </table>
-<div class="row">
-    {% include 'MainBundle:Default:paginadoHospedajes.html.twig' %}
-</div>

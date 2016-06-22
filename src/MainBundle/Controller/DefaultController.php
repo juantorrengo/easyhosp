@@ -3,6 +3,7 @@
 namespace MainBundle\Controller;
 
 use Doctrine\ORM\ORMException;
+use MainBundle\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="home", defaults={"page" = 1})
      */
-    public function indexAction($page)
+    public function indexAction(Request $request,$page)
     {
         $nextPage = $page + 1;
         $prevPage = $page - 1;
@@ -23,7 +24,26 @@ class DefaultController extends Controller
         $hospedajes = $em->getRepository('MainBundle:Hospedaje')->listarHospedajesPaginados($pageSize, $page);
         $totalItems = count($hospedajes);
         $pagesCount = ceil($totalItems / $pageSize);
-        return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
-            "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems));
+        if(self::checkSession($request)){
+            $session = $request->getSession();
+            $userId = $session->get('id');
+            $em = $this->getDoctrine()->getManager();
+            $favoritos = $em->getRepository('MainBundle:Favorito')->findBy(array('usuario'=>$userId));
+            return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
+                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems, "favoritos"=>$favoritos));
+        }else{
+            return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
+                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems));
+        }
+    }
+
+    private function checkSession(Request $request){
+        $session = $request->getSession();
+        if($session->has("id")){
+            $condicion = true;
+        }else{
+            $condicion = false;
+        }
+        return $condicion;
     }
 }

@@ -24,7 +24,7 @@ class Consulta
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="datetimetz")
+     * @ORM\Column(name="fecha", type="datetime")
      */
     private $fecha;
 

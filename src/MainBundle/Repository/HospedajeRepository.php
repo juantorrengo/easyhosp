@@ -30,6 +30,19 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
         return $paginator;
     }
 
+    public function findHospedajeUsuario($id) {
+        $dql = 'SELECT  h, h.titulo, h.id, h.direccion, h.localidad, h.fechaPublicacion, h.descripcion, h.capacidad, h.precio, th.nombre as tipoHosp 
+                FROM MainBundle:Hospedaje h 
+                INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id 
+                INNER JOIN MainBundle:Favorito f WITH f.hospedaje = h.id
+                WHERE f.usuario = :id
+                ORDER BY h.titulo';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':id', $id)
+            ->getResult();
+    }
+
     public function findDetalleHospedaje($id) {
         $dql = 'SELECT h, h.titulo, h.descripcion, h.fechaPublicacion, h.localidad, h.capacidad, h.precio, h.direccion, 
                 th.nombre as tipoHosp, u.nombre as userNom, u.apellido as userApe

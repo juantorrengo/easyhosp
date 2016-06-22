@@ -26,10 +26,25 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        function isBlank(value, elem, param) {
+            var espacio_blanco = /[a-z]/i;
+            if(!espacio_blanco.test(value)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        $.validator.addMethod("blancos",
+                function(value, element) {
+                    return /[a-z]/i.test(value);
+                }
+                , "No se permiten espacios en blanco.");
+
         $('#formEditTipo').validate({
             rules: {
                 nombre: {
                     required: true,
+                    blancos: true,
                     minlength: 3
                 }
             },

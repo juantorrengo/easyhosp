@@ -29,9 +29,7 @@ class SecurityController extends Controller
                 $session->set('email', $user->getEmail());
                 $session->set('isPremium', $user->getIsPremium());
                 $session->set('isAdmin', $user->getIsAdmin());
-                $em = $this->getDoctrine()->getManager();
-                $hospedajes = $this->getDoctrine()->getRepository('MainBundle:Hospedaje')->findByUsuario($user->getId());
-                return DefaultController::indexAction(1);
+                return $this->redirect($this->generateUrl('home',  array('request' => $request, 'page'=>1)));
             }else{
                 $this->get('session')->getFlashBag()->add('error', 'Nombre de usuario o contraseña incorrectos');
                 return $this->render('MainBundle:Security:login.html.twig');
@@ -99,7 +97,7 @@ class SecurityController extends Controller
     public function logoutAction(Request $request) {
         $session = $request->getSession();
         $session->clear();
-        return DefaultController::indexAction(1);
+        return $this->redirect($this->generateUrl('home', array('request'=>$request, 'page'=>1)));
     }
     /**
      * @Route("/indexAdmin", name="admin")

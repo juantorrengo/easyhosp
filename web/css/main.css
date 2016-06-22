@@ -169,6 +169,16 @@
     cursor: no-drop;
 }
 
+.markFav{
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.unmarkFav{
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 .pointer{
     cursor: pointer;
 }
