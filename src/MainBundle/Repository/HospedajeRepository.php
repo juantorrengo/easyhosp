@@ -44,7 +44,7 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findDetalleHospedaje($id) {
-        $dql = 'SELECT h, h.titulo, h.descripcion, h.fechaPublicacion, h.localidad, h.capacidad, h.precio, h.direccion, 
+        $dql = 'SELECT h, h.titulo, h.id, h.descripcion, h.fechaPublicacion, h.localidad, h.capacidad, h.precio, h.direccion,
                 th.nombre as tipoHosp, u.nombre as userNom, u.apellido as userApe
                 FROM MainBundle:Hospedaje h 
                 INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id 
