@@ -5,6 +5,7 @@ namespace MainBundle\Controller;
 use Doctrine\ORM\ORMException;
 use easyhosp\MainBundle\Form\HospedajeType;
 use MainBundle\Entity\Favorito;
+use MainBundle\Entity\Consulta;
 use MainBundle\Entity\Hospedaje;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -170,10 +171,12 @@ class HospedajeController extends Controller
         try{
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findDetalleHospedaje($id);
+            $em = $this->getDoctrine()->getManager();
+            $consultas = $em->getRepository('MainBundle:Consulta')->findAll();
             if(!$hospedaje){
                 $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrados');
             }else{
-                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje));
+                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas));
             }
         }catch (ORMException $e){
             $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
@@ -239,5 +242,43 @@ class HospedajeController extends Controller
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
+    /**
+     * @Route("/checkConsult", name="checkConsult")
+     */
+    public function checkConsultAction(Request $request)
+    {
+        $pregunta = $request->get('consulta');
+        $idHospedaje = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $hospedaje = $em->getRepository('MainBundle:Hospedaje')->find($idHospedaje);
+        $idUsuario = $request->getSession()->get('id');
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository('MainBundle:Usuario')->find($idUsuario);
+
+        $consulta = new Consulta();
+        $consulta->setPregunta($pregunta);
+        $consulta->setUsuario($usuario);
+        $consulta->setHospedaje($hospedaje);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($consulta);
+        $em->flush();;
+        return $this->redirect($this->generateUrl('home'));
+    }
+
+    /**
+     * @Route("/responderConsulta", name="responderConsulta")
+     */
+    public function responderConsultaAction(Request $request)
+    {
+        $respuesta = $request->get('respuesta');
+        $idConsulta = $request->get('idConsulta');
+        $em = $this->getDoctrine()->getManager();
+        $consulta = $em->getRepository('MainBundle:Consulta')->find($idConsulta);
+        $consulta->setRespuesta($respuesta);
+        $em->flush();;
+        return $this->redirect($this->generateUrl('home'));
+    }
+
 
 }
