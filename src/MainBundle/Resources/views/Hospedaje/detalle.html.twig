@@ -6,6 +6,7 @@
     <dl class="dl-horizontal">
         <dt>Descripción</dt>
         <dd>{{ hospedaje.descripcion}}</dd>
+        <dd></dd>
         <dt>Tipo</dt>
         <dd>{{ hospedaje.tipoHosp}}</dd>
         <dt>Localidad</dt>
@@ -21,7 +22,14 @@
         <dt>Dueño</dt>
         <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
         </br>
+            <img cursor="pointer" width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="NY" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+        </br></br>
         <dt>PREGUNTAS</dt></br>
+
         {% for consulta in consultas%}
             <br>
             <dd>¿{{ consulta.pregunta }} </dd>
@@ -52,3 +60,4 @@
         Cerrar
     </button>
 </div>
+
