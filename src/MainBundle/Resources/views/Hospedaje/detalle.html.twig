@@ -20,9 +20,32 @@
         <dd>${{ hospedaje.precio}}</dd>
         <dt>Dueño</dt>
         <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
-
+        </br>
+        <dt>PREGUNTAS</dt></br>
+        {% for consulta in consultas%}
+            <br>
+            <dd>¿{{ consulta.pregunta }} </dd>
+            {% if consulta.respuesta != "" %}
+                <dd> {{ consulta.respuesta }} </dd>
+            {% elseif app.session.get('nombre') == hospedaje.userNom %}
+                <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
+                    <textarea type="text" name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
+                    <input type="hidden" name="id" value="{{ hospedaje.id }}">
+                    <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
+                    <button id="responderConsulta" type="submit"> Enviar</button>
+                </form>
+            {% endif %}
+        {% endfor %}
     </dl>
 </div>
+{% if app.session.get('id') != "" %}
+    <form id="form-signin" action="{{ path('checkConsult') }}" method="POST" class="form-signin">
+        <textarea type="text" name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
+        <input type="hidden" name="id" value="{{ hospedaje.id }}">
+        <button id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
+            Enviar</button>
+    </form>
+{% endif %}
 <div class="modal-footer">
     <button class="btn btn-small" data-dismiss="modal">
         <i class="icon-remove"></i>
