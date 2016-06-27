@@ -24,16 +24,19 @@ class DefaultController extends Controller
         $hospedajes = $em->getRepository('MainBundle:Hospedaje')->listarHospedajesPaginados($pageSize, $page);
         $totalItems = count($hospedajes);
         $pagesCount = ceil($totalItems / $pageSize);
+        $em = $this->getDoctrine()->getManager();
+        $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
         if(self::checkSession($request)){
             $session = $request->getSession();
             $userId = $session->get('id');
             $em = $this->getDoctrine()->getManager();
             $favoritos = $em->getRepository('MainBundle:Favorito')->findBy(array('usuario'=>$userId));
             return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
-                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems, "favoritos"=>$favoritos));
+                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems, "favoritos"=>$favoritos,
+                "tipos"=>$tipos));
         }else{
             return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
-                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems));
+                "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems, "tipos"=>$tipos));
         }
     }
 

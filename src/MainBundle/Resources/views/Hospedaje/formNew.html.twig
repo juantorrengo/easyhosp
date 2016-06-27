@@ -3,8 +3,8 @@
     <h4 class="blue bigger">Nuevo Hospedaje</h4>
 </div>
 <div class="modal-body">
-    <form class="form-horizontal" name="formHosp" id="formNewHosp" action="{{ path('hospSave') }}" method="POST">
-        <div class="form-group row">
+    <form class="form-horizontal" enctype="multipart/form-data" name="formHosp" action="" method="POST">
+        {#<div class="form-group row">
             <label for="inputTitulo" class="col-sm-3 form-control-label">Título*</label>
             <div class="col-sm-7">
                 <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título" />
@@ -49,15 +49,15 @@
             <div class="col-sm-7">
                 <input type="number" class="form-control" name="capacidad" id="capacidad" placeholder="Capacidad" />
             </div>
-        </div>
+        </div>#}
         <div class="form-group row">
             <label for="inputImagenes" class="col-sm-3 form-control-label">Imágenes*</label>
             <div class="col-sm-7">
-                <input type="file" class="form-control" name="imagenes[]" />
-                <input type="file" class="form-control" name="imagenes[]" />
-                <input type="file" class="form-control" name="imagenes[]" />
-                <input type="file" class="form-control" name="imagenes[]" />
-                <input type="file" class="form-control" name="imagenes[]" />
+                <input type="file" id="file1" class="form-control" name="file1" required />
+                <input type="file" class="form-control" name="file2"/>
+                <input type="file" class="form-control" name="file3" />
+                <input type="file" class="form-control" name="file4" />
+                <input type="file" class="form-control" name="file5" />
             </div>
         </div>
     </form>
@@ -74,26 +74,23 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-       /* $('#formNewTipo').validate({
-            rules: {
-                nombre: {
-                    required: true,
-                    minlength: 4
-                }
+    $('#aceptarNewHosp').on('click', function () {
+        var formData = new FormData();
+        formData.append('file', document.getElementById('file1').files[0]);
+        $.ajax({
+            url: Routing.generate('hospSave'),
+            data: formData,
+            enctype: 'multipart/form-data',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                console.log(data);
             },
-            messages: {
-                nombre: {
-                    required: "El nombre es requerido",
-                    minlength: "Debe tener un mínimo de 4 caracateres"
-                }
+            error: function () {
+
             }
-        });*/
-        $('#aceptarNewHosp').on('click', function (event) {
-            event.preventDefault();
-//            if($('#formNewTipo').valid()){
-                $('#formNewHosp').submit();
-//            }
         });
     });
 </script>

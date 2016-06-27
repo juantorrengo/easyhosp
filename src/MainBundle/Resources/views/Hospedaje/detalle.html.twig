@@ -1,31 +1,98 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h4 class="beBlue bigger"><strong>{{ hospedaje.titulo }}</strong></h4>
-</div>
-<div class="modal-body">
-    <dl class="dl-horizontal">
-        <dt>Descripción</dt>
-        <dd>{{ hospedaje.descripcion}}</dd>
-        <dt>Tipo</dt>
-        <dd>{{ hospedaje.tipoHosp}}</dd>
-        <dt>Localidad</dt>
-        <dd>{{ hospedaje.localidad}}</dd>
-        <dt>Fecha publicación</dt>
-        <dd>{{ hospedaje.fechaPublicacion|date('d-m-Y')}}</dd>
-        <dt>Dirección</dt>
-        <dd>{{ hospedaje.direccion}}</dd>
-        <dt>Capacidad</dt>
-        <dd>{{ hospedaje.capacidad}} personas.</dd>
-        <dt>Precio (Por día)</dt>
-        <dd>${{ hospedaje.precio}}</dd>
-        <dt>Dueño</dt>
-        <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
+{% extends 'base.html.twig' %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                {{ hospedaje.titulo }}
+            </h1>
+        </div>
+    </div>
+    <div id="content">
+        <input type="hidden" id="hospId" value="{{ hospedaje.id }}" />
+        <input type="hidden" id="precioDia" value="{{ hospedaje.precio }}" />
+        <dl class="dl-horizontal col-lg-6">
+            <dt>Descripción</dt>
+            <dd>{{ hospedaje.descripcion}}</dd>
+            <dd></dd>
+            <dt>Tipo</dt>
+            <dd>{{ hospedaje.tipoHosp}}</dd>
+            <dt>Localidad</dt>
+            <dd>{{ hospedaje.localidad}}</dd>
+            <dt>Fecha publicación</dt>
+            <dd>{{ hospedaje.fechaPublicacion|date('d-m-Y')}}</dd>
+            <dt>Dirección</dt>
+            <dd>{{ hospedaje.direccion}}</dd>
+            <dt>Capacidad</dt>
+            <dd>{{ hospedaje.capacidad}} personas.</dd>
+            <dt>Precio (Por día)</dt>
+            <dd>${{ hospedaje.precio}}</dd>
+            <dt>Dueño</dt>
+            <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
+        </dl>
+        <div class="row">
+            <div class="col-lg-6">
+                <h4>Verificar disponibilidad</h4>
+                <form action="{{ path('reservar') }}" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="datefilterDetail" id="fechasDetail" value="" placeholder="Fecha" />
+                        <input type="hidden" name="desde" value="">
+                        <input type="hidden" name="hasta" value="">
+                        <input type="hidden" name="hospId" id="hospId" value="{{ hospedaje.id }}" />
+                        <input type="hidden" name="monto" id="monto" value="" />
+                        <input type="hidden" name="user" id="user" value="{{ hospedaje.userId }}" />
+                    </div>
+                    <div id="dispMsg"></div>
+                    <div class="row hidden" id="divReserva">
+                        <div id="datosReserva"></div>
+                        <div><small id="msgCondicion" class="oblique">Al reservar un hospedaje, deberá aguardar a que la reserva sea aceptada. Una vez aceptada, le daremos la información del dueño para
+                                que se pueda contactar.</small>
+                        </div>
+                        <button id="btn-reserva" class=" btn btn-success btn-sm" type="submit">Reservar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h3>Galería</h3>
+                </div>
+            </div>
+            <img cursor="pointer" width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="NY" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h3>Preguntas</h3>
+                </div>
+            </div>
+            {% for consulta in consultas %}
+                <br>
+                <dd>{{ consulta.pregunta }} </dd>
+                {% if consulta.respuesta != "" %}
+                    <dd> {{ consulta.respuesta }} </dd>
+                {% elseif app.session.get('nombre') == hospedaje.userNom %}
+                    <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
+                        <textarea type="text" name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
+                        <input type="hidden" name="id" value="{{ hospedaje.id }}">
+                        <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
+                        <button id="responderConsulta" type="submit"> Enviar</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+            {% if app.session.get('id') != "" %}
+                <form id="form-signin" action="{{ path('checkConsult') }}" method="POST" class="form-signin">
+                    <textarea type="text" name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
+                    <input type="hidden" name="id" value="{{ hospedaje.id }}">
+                    <button id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
+                        Enviar</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
 
-    </dl>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-small" data-dismiss="modal">
-        <i class="icon-remove"></i>
-        Cerrar
-    </button>
-</div>

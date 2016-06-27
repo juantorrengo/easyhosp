@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Nuevo Hospedaje</h4>
+</div>
+<div class="modal-body">
+    {{ form_start(form,{ 'attr': {'class': 'form-imagen'} }) }}
+
+    {{ form_row(form.path) }}
+    {{ form_row(form.file) }}
+    {{ form_end(form) }}
+</div>
+<div class="modal-footer">
+    <button id="aceptarNewHosp" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script>
+    $('.form-imagen').on("submit",function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('nuevoHospedaje'),
+            data:  new FormData($(this)[0]),
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            cache:false,
+            success: function() {
+            },
+            error: function (){
+            }
+        });
+    });
+</script>
+

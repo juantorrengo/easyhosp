@@ -44,8 +44,8 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findDetalleHospedaje($id) {
-        $dql = 'SELECT h, h.titulo, h.descripcion, h.fechaPublicacion, h.localidad, h.capacidad, h.precio, h.direccion, 
-                th.nombre as tipoHosp, u.nombre as userNom, u.apellido as userApe
+        $dql = 'SELECT h, h.titulo, h.id, h.descripcion, h.fechaPublicacion, h.localidad, h.capacidad, h.precio, h.direccion, 
+                th.nombre as tipoHosp, u.nombre as userNom, u.apellido as userApe, u.id as userId
                 FROM MainBundle:Hospedaje h 
                 INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id 
                 INNER JOIN MainBundle:Usuario u WITH h.usuario = u.id 
@@ -56,7 +56,7 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
             ->getOneOrNullResult();
     }
 
-    public function buscarHospPaginated($busqueda, $pageSize, $currentPage) {
+    /*public function buscarHospPaginated($busqueda, $pageSize, $currentPage) {
         $em = $this->getEntityManager();
         $dql = "SELECT h, h.id, h.titulo, h.localidad, h.direccion, h.precio, h.fechaPublicacion, h.capacidad, th.nombre as tipoHosp 
 				FROM MainBundle:Hospedaje h
@@ -65,6 +65,28 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
 				ORDER BY h.fechaPublicacion DESC";
         $query = $em->createQuery($dql)
             ->setParameter('busqueda', '%'.$busqueda.'%')
+            ->setFirstResult($pageSize * ($currentPage - 1))
+            ->setMaxResults($pageSize);
+
+        $paginator = new Paginator($query);
+
+        return $paginator;
+    }*/
+
+    public function buscarHospPaginated($pageSize, $currentPage, $desde, $hasta) {
+        $em = $this->getEntityManager();
+        $dql = "SELECT h, h.id, h.titulo, h.localidad, h.direccion, h.precio, h.fechaPublicacion, h.capacidad, th.nombre as tipoHosp 
+				FROM MainBundle:Hospedaje h
+				INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id
+				WHERE h.id NOT IN (
+				  SELECT r.IDENTITY hospedaje 
+				  FROM MainBundle:Reserva r
+				  WHERE (r.fechaInicio < :desde AND r.fechaFin > :desde)
+				  OR (r.fechaInicio < :hasta AND r.fechaFin > :hasta)
+				  OR (r.fechaInicio < :desde AND r.fechaFin > :hasta)
+				ORDER BY h.fechaPublicacion DESC";
+        $query = $em->createQuery($dql)
+            ->setParameters(['desde'=>$desde, 'hasta'=>$hasta])
             ->setFirstResult($pageSize * ($currentPage - 1))
             ->setMaxResults($pageSize);
 

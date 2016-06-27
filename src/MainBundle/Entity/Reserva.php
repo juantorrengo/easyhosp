@@ -22,16 +22,17 @@ class Reserva
     private $id;
 
     /**
-     * @var \DateTime
+     * @var \Date
      *
-     * @ORM\Column(name="fechaInicio", type="datetime")
+     * @ORM\Column(name="fechaInicio", type="date")
      */
     private $fechaInicio;
 
+
     /**
-     * @var \DateTime
+     * @var \Date
      *
-     * @ORM\Column(name="fechaFin", type="datetime")
+     * @ORM\Column(name="fechaFin", type="date")
      */
     private $fechaFin;
 
@@ -41,6 +42,13 @@ class Reserva
      * @ORM\Column(name="monto", type="integer")
      */
     private $monto;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="confirmada", type="integer", length=1,  options={"default" = 0})
+     */
+    private $confirmada;
 
     /**
      * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="reservas")
@@ -65,53 +73,7 @@ class Reserva
         return $this->id;
     }
 
-    /**
-     * Set fechaInicio
-     *
-     * @param \DateTime $fechaInicio
-     *
-     * @return Reserva
-     */
-    public function setFechaInicio($fechaInicio)
-    {
-        $this->fechaInicio = $fechaInicio;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaInicio
-     *
-     * @return \DateTime
-     */
-    public function getFechaInicio()
-    {
-        return $this->fechaInicio;
-    }
-
-    /**
-     * Set fechaFin
-     *
-     * @param \DateTime $fechaFin
-     *
-     * @return Reserva
-     */
-    public function setFechaFin($fechaFin)
-    {
-        $this->fechaFin = $fechaFin;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaFin
-     *
-     * @return \DateTime
-     */
-    public function getFechaFin()
-    {
-        return $this->fechaFin;
-    }
+    
 
     /**
      * Set monto
@@ -183,5 +145,53 @@ class Reserva
     public function getHospedaje()
     {
         return $this->hospedaje;
+    }
+
+    /**
+     * @return \Date
+     */
+    public function getFechaInicio()
+    {
+        return $this->fechaInicio;
+    }
+
+    /**
+     * @param \Date $fechaInicio
+     */
+    public function setFechaInicio($fechaInicio)
+    {
+        $this->fechaInicio = $fechaInicio;
+    }
+
+    /**
+     * @return \Date
+     */
+    public function getFechaFin()
+    {
+        return $this->fechaFin;
+    }
+
+    /**
+     * @param \Date $fechaFin
+     */
+    public function setFechaFin($fechaFin)
+    {
+        $this->fechaFin = $fechaFin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmada()
+    {
+        return $this->confirmada;
+    }
+
+    /**
+     * @param mixed $confirmada
+     */
+    public function setConfirmada($confirmada)
+    {
+        $this->confirmada = $confirmada;
     }
 }

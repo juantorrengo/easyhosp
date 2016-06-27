@@ -24,21 +24,21 @@ class Consulta
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="datetime")
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
      */
     private $fecha;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pregunta", type="text")
+     * @ORM\Column(name="pregunta", type="text", nullable=true)
      */
     private $pregunta;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="respuesta", type="text")
+     * @ORM\Column(name="respuesta", type="text", nullable=true)
      */
     private $respuesta;
 

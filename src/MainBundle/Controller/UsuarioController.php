@@ -43,12 +43,7 @@ class UsuarioController extends Controller
             $hospedajes= $em->getRepository('MainBundle:Hospedaje')->findHospedajeUsuario($userId);
             $em = $this->getDoctrine()->getManager();
             $favoritos = $em->getRepository('MainBundle:Favorito')->findBy(array('usuario'=>$userId));
-            if(!$hospedajes){
-                $this->get('session')->getFlashBag()->add('error', 'Error, no se encontró el usuario.');
-                return $this->redirect($this->generateUrl('home', array('request' => $request, 'page'=>1)));
-            }else{
-                return $this->render('MainBundle:Admin:misFavoritos.html.twig', array('hospedajes'=>$hospedajes, 'favoritos'=>$favoritos));
-            }
+            return $this->render('MainBundle:Admin:misFavoritos.html.twig', array('hospedajes'=>$hospedajes, 'favoritos'=>$favoritos));
         }catch (ORMException $e){
             $this->get('session')->getFlashBag()->add('error', 'Error, no se encontró el usuario.');
             return $this->redirect($this->generateUrl('home', array('request' => $request, 'page'=>1)));

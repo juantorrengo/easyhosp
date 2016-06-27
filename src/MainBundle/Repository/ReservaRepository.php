@@ -10,4 +10,16 @@ namespace MainBundle\Repository;
  */
 class ReservaRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findDisponibilidad($from, $to, $id){
+        $dql = 'SELECT r, r.id, r.fechaFin, r.fechaInicio FROM MainBundle:Reserva r 
+                WHERE ((r.fechaInicio <= :desde AND r.fechaFin >= :desde AND r.hospedaje = :id) OR 
+                      ( r.fechaInicio <= :hasta AND r.fechaFin >= :hasta AND r.hospedaje = :id) OR 
+                      ( r.fechaInicio > :desde AND r.fechaFin < :hasta AND r.hospedaje = :id))';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters(['desde'=>$from, 'hasta'=>$to, 'id'=>$id])
+            ->getOneOrNullResult();
+    }
+
+
 }

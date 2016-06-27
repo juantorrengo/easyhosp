@@ -76,6 +76,53 @@ class Hospedaje
     /**
      * @var string
      *
+     * @ORM\Column(name="reservadas", type="string", length=255)
+     */
+    private $reservadas;
+
+    /**
+     * @return mixed
+     */
+    public function getReservadas()
+    {
+        return $this->reservadas;
+    }
+
+    /**
+     * @param mixed $reservadas
+     */
+    public function setReservadas($reservadas)
+    {
+        $this->reservadas = $reservadas;
+    }
+
+
+    /**
+     * @ORM\Column(type="string", name="imagen1", length=255, nullable=true)
+     */
+    private $imagen1;
+
+    /**
+     * @ORM\Column(type="string", name="imagen2", length=255, nullable=true)
+     */
+    private $imagen2;
+    /**
+     * @ORM\Column(type="string", name="imagen3", length=255, nullable=true)
+     */
+    private $imagen3;
+    /**
+     * @ORM\Column(type="string", name="imagen4", length=255, nullable=true)
+     */
+    private $imagen4;
+    /**
+     * @ORM\Column(type="string", name="imagen5", length=255, nullable=true)
+     */
+    private $imagen5;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="capacidad", type="string", length=255)
      */
     private $capacidad;
@@ -111,6 +158,8 @@ class Hospedaje
      * @ORM\OneToMany(targetEntity="Favorito", mappedBy="hospedaje")
      */
     protected $favoritos;
+
+
 
 
     public function __construct()
@@ -490,6 +539,86 @@ class Hospedaje
     public function setBorrado($borrado)
     {
         $this->borrado = $borrado;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagen1()
+    {
+        return $this->imagen1;
+    }
+
+    /**
+     * @param mixed $imagen1
+     */
+    public function setImagen1($imagen1)
+    {
+        $this->imagen1 = $imagen1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagen2()
+    {
+        return $this->imagen2;
+    }
+
+    /**
+     * @param mixed $imagen2
+     */
+    public function setImagen2($imagen2)
+    {
+        $this->imagen2 = $imagen2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagen3()
+    {
+        return $this->imagen3;
+    }
+
+    /**
+     * @param mixed $imagen3
+     */
+    public function setImagen3($imagen3)
+    {
+        $this->imagen3 = $imagen3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagen4()
+    {
+        return $this->imagen4;
+    }
+
+    /**
+     * @param mixed $imagen4
+     */
+    public function setImagen4($imagen4)
+    {
+        $this->imagen4 = $imagen4;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagen5()
+    {
+        return $this->imagen5;
+    }
+
+    /**
+     * @param mixed $imagen5
+     */
+    public function setImagen5($imagen5)
+    {
+        $this->imagen5 = $imagen5;
     }
 
 }

@@ -9,12 +9,23 @@
     </div>
     <div id="barraBusqueda">
         <nav class="navbar">
-            <form class="navbar-form navbar-left" role="search" style="margin-left: -16px">
+            <form class="navbar-form navbar-left" id="searchForm" role="search" style="margin-left: -16px">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="hospBuscado" placeholder="Buscar" required>
+                    <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título" disabled>
+                    <input type="text" class="form-control" name="localida" id="localidad" placeholder="Localidad" disabled>
+                    <input type="number" class="form-control" name="capacidad" id="capacidad" placeholder="Capacidad" disabled>
+                    <select class="form-control" name="tipohospedaje" id="tipohospedaje" disabled>
+                        <option value="">Todos</option>
+                        {% for tipo in tipos %}
+                            <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" class="form-control" name="datefilter" id="fechas" value="" placeholder="Fecha" />
+                    <input type="hidden" name="desde" id="desde" value="">
+                    <input type="hidden" name="hasta" id="hasta" value="">
                 </div>
-                <button id="btnSearchHosp" class="btn btn-info searchOrder" data-path="{{ path('searchHosp', {'busqueda' : 'x'}) }}">Buscar</button>
-                <button id="btnCleanSearch" type="reset" class="btn btn-warning searchOrder" data-path="{{ path('hospPaginated') }}">Limpiar</button>
+                <button id="btnSearchHosp" class="btn btn-info searchOrder">Buscar</button>
+                <button id="btnCleanSearch" type="reset" disabled class="btn btn-warning searchOrder" data-path="{{ path('hospPaginated') }}">Limpiar</button>
                 <legend class="oblique searchHosp" >La búsqueda puede ser por título, tipo, localidad y capacidad.</legend>
             </form>
         </nav>
