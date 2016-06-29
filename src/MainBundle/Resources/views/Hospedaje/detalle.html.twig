@@ -58,11 +58,17 @@
                     <h3>Galería</h3>
                 </div>
             </div>
-            <img cursor="pointer" width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
-            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="NY" />
-            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="Japon" />
-            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
-            <img width="110px" height="80" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="Japon" />
+            <div id="previa">
+                <div>
+                    <img src="" width="400"	height="700" id="imgFull">
+                </div>
+            </div>
+
+            <div id="container">
+                <img id="imgg" class="img-rounded" src="{{ asset('images/japon.jpg') }}"     alt="japon" />
+                <img class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="nuevayork" />
+                <img class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="patagonia" />
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
@@ -77,7 +83,7 @@
                     <dd> {{ consulta.respuesta }} </dd>
                 {% elseif app.session.get('nombre') == hospedaje.userNom %}
                     <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
-                        <textarea type="text" name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
+                        <textarea name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
                         <input type="hidden" name="id" value="{{ hospedaje.id }}">
                         <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
                         <button id="responderConsulta" type="submit"> Enviar</button>
@@ -86,7 +92,7 @@
             {% endfor %}
             {% if app.session.get('id') != "" %}
                 <form id="form-signin" action="{{ path('checkConsult') }}" method="POST" class="form-signin">
-                    <textarea type="text" name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
+                    <textarea  name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
                     <input type="hidden" name="id" value="{{ hospedaje.id }}">
                     <button id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
                         Enviar</button>
@@ -94,5 +100,5 @@
             {% endif %}
         </div>
     </div>
-{% endblock %}
 
+{% endblock %}
