@@ -4,10 +4,10 @@ namespace MainBundle\Controller;
 
 use Doctrine\ORM\ORMException;
 use MainBundle\Entity\Favorito;
-use MainBundle\Entity\Hosp;
 use MainBundle\Entity\Hospedaje;
 use MainBundle\Entity\Consulta;
-use MainBundle\Form\HospType;
+use MainBundle\Entity\TipoHospedaje;
+//use MainBundle\Form\HospType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,8 @@ class HospedajeController extends Controller
 
     /**
      * @Route("/misHospedajes", name="misHospedajes")
-*/
+    */
+
     public function misHospedajesAction(Request $request){
         try{
             $userId = $request->getSession()->get('id');
@@ -32,16 +33,17 @@ class HospedajeController extends Controller
             return $this->render('MainBundle:Security:login.html.twig');
         }
     }
-    /**
-    * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
-    */
-    public function nuevoHospedajeAction(Request $request){
-        /*$em = $this->getDoctrine()->getManager();
-        $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
-        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos'=>$tipos));*/
 
-        $hosp = new Hosp();
-        $formHosp = $this->createForm(HospType::class, $hosp);
+    /* /**
+     * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
+
+    public function nuevoHospedajeAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
+        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos'=>$tipos));
+
+        $hosp = new Hospedaje();
+        $formHosp = $this->createForm(HospedajeType::class, $hosp);
         $formHosp->handleRequest($request);
         if($formHosp->isValid()){
             $hosp->setFile($request->files->get('imagen'));
@@ -52,9 +54,69 @@ class HospedajeController extends Controller
         return $this->render('MainBundle:Hospedaje:formPrueba.html.twig', array(
             'form' => $formHosp->createView(),
         ));
-    }
-    
+    } */
 
+    /*
+    /**
+     * @Route("/hospSave", name="hospSave", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+
+    public function hospSaveAction(Request $request){
+        /**
+         * @var UploadedFile $file
+
+        $file = $request->files->all();
+        $filename = $file->getClientOriginalName();
+        $response = new Response(json_encode($filename));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
+    } */
+
+    /**
+     * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
+     */
+    public function nuevoHospedajeAction(){
+        $em = $this->getDoctrine()->getManager();
+        $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
+        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos'=>$tipos));
+    }
+
+    /**
+     * @Route("/hospSave", name="hospSave", options={"expose"=true})
+    */
+    public function hospSaveAction(Request $request){
+        try{
+            $idUsuario = $request->getSession()->get('id');
+            $em = $this->getDoctrine()->getManager();
+            $usuario = $em->getRepository('MainBundle:Usuario')->find($idUsuario);
+
+            $idTipo = $request->get('tipohospedaje');
+            $em = $this->getDoctrine()->getManager();
+            $tipo = $em->getRepository('MainBundle:TipoHospedaje')->find($idTipo);
+
+            $hospedaje = new Hospedaje();
+            $hospedaje->setTitulo($request->get('titulo'));
+            $hospedaje->setDescripcion($request->get('descripcion'));
+            $hospedaje->setDireccion($request->get('direccion'));
+            $hospedaje->setLocalidad($request->get('localidad'));
+            $hospedaje->setPrecio($request->get('precio'));
+            $hospedaje->setCapacidad($request->get('capacidad'));
+            $hospedaje->setBorrado(0);
+            $hospedaje->setUsuario($usuario);
+            $hospedaje->setTipohospedaje($tipo);
+            $hospedaje->setFechaPublicacion(new \DateTime($request->get("now")));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hospedaje);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'El Hospedaje fue creado correctamente.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }
+        catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error inesperado, intente nuevamente.');
+            return $this->render('MainBundle:Admin:index.html.twig');
+        }
+    }
     /**
      * @Route("/checkDisp/{from}/{to}/{id}", name="checkDisp", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -72,21 +134,7 @@ class HospedajeController extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/hospSave", name="hospSave", options={"expose"=true})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function hospSaveAction(Request $request){
-        /**
-         * @var UploadedFile $file
-         */
-        $file = $request->files->all();
-        $filename = $file->getClientOriginalName();
-        $response = new Response(json_encode($filename));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
 
-    }
 
     /**
  * @Route("/marcarFav/{id}", name="marcarFav", options={"expose"=true})
@@ -155,7 +203,9 @@ class HospedajeController extends Controller
     /**
      * @Route("/detalleHosp/{id}", name="detalleHosp")
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
+
     public function detalleHospAction($id)
     {
         try{
@@ -266,5 +316,144 @@ class HospedajeController extends Controller
         return $this->redirect($this->generateUrl('home'));
     }
 
+    /**
+     * @Route("/hospedajeMsjDelete/{id}", name="hospedajeMsjDelete")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function hospedajeMsjDeleteAction($id)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
+            if(!$hospedaje){
+                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
+            }else{
+                return $this->render('MainBundle:Hospedaje:msjDelete.html.twig', array('hospedaje'=>$hospedaje));
+            }
+        }catch (Exception $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        }
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
+    /**
+     * @Route("/hospedajeDelete", name="hospedajeDelete")
+     */
+    public function hospedajeDeleteAction(Request $request)
+    {
+        try {
+            $idHospedajeDelete = $request->get('idHospedaje');
+            $em = $this->getDoctrine()->getManager();
+            $tieneReservas = $em->getRepository('MainBundle:Reserva')->findOneByReserva($idHospedajeDelete);
+            $em = $this->getDoctrine()->getManager();
+            $hospedajeDelete = $em->getRepository($this->repositorio)->findOneById($idHospedajeDelete);
+            if(!$tieneReservas){
+                $hospedajeDelete->setBorrado(2);
+                $em->persist($hospedajeDelete);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeDelete->gettitulo().' fue borrado.');
+            }else{
+                $hospedajeDelete->setBorrado(1);
+                $em->persist($hospedajeDelete);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeDelete->gettitulo().' fue archivado ya que tiene hospedajes asociados.');
+            }
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error al eliminar el hospedaje, intente nuevamente.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }
+    }
+
+    /**
+     * @Route("/hospedajeEdit/{id}", name="hospedajeEdit")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function hospedajeEditAction($id)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
+
+            $em = $this->getDoctrine()->getManager();
+            $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
+            if(!$hospedaje){
+                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
+            }else{
+                return $this->render('MainBundle:Hospedaje:formEdit.html.twig', array('hospedaje'=>$hospedaje, 'tipos'=>$tipos));
+            }
+        }catch (Exception $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        }
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/hospEditSave", name="hospEditSave")
+     */
+    public function hospEditSaveAction(Request $request)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $tipo = $em->getRepository($this->repositorio)->findOneById($request->get('idTipo'));
+            $tipo->setNombre($request->get('nombre'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($tipo);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipo->getNombre().' fue editado correctamente.');
+            return $this->redirect($this->generateUrl('tipoHosp'));
+        }catch (Exception $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error al edtar tipo de hospedaje, intente nuevamente.');
+            return $this->redirect($this->generateUrl('tipoHosp'));
+        }
+    }
+
+    /**
+     * @Route("/hospedajeMsjHabilitar/{id}", name="hospedajeMsjHabilitar")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function hospedajeMsjHabilitarAction($id)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
+            if(!$hospedaje){
+                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
+            }else{
+                return $this->render('MainBundle:Hospedaje:msjHabilitar.html.twig', array('hospedaje'=>$hospedaje));
+            }
+        }catch (Exception $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        }
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/hospedajeHabilitar", name="hospedajeHabilitar")
+     */
+    public function hospedajeHabilitarAction(Request $request)
+    {
+        try{
+            $idHospedajeHabilitar = $request->get('idHospedaje');
+            $em = $this->getDoctrine()->getManager();
+            $hospedajeHabilitar = $em->getRepository($this->repositorio)->findOneById($idHospedajeHabilitar);
+            $hospedajeHabilitar->setBorrado(0);
+            $em->persist($hospedajeHabilitar);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeHabilitar->gettitulo().' fue habilitado.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error al eliminar el hospedaje, intente nuevamente.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }
+    }
 }

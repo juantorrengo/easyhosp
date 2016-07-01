@@ -1,4 +1,14 @@
 $(document).ready(function() {
+    $("#imgg").on("click", function(){
+        var direccion = $(this).attr('src');
+        $("#imgFull").attr('src', direccion);
+        $("#previa").fadeIn();
+    });
+
+    $("#previa").on("click", function(){
+            $(this).fadeOut();
+    });
+
     $('.carousel').carousel({
         interval: 5000 //changes the speed
     });
@@ -6,7 +16,7 @@ $(document).ready(function() {
     blockStyle = {
         message: '',
         overlayCSS: { backgroundColor: '#fff', opacity:0 }
-    }
+    };
 
     $('#forgetPassCard').hide();
     
@@ -396,6 +406,61 @@ $(document).ready(function() {
         var idTipo = $(this).find('.idTipo').val();
         var url = $(this).attr('data-path');
         url = url.replace('x', idTipo);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+    // EDITAR HOSPEDAJE
+    $('.btnEditHosp').on('click', function (e) {
+        e.preventDefault();
+        var idHosp = $(this).find('.idHospedaje').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+    // ELIMINAR HOSPEDAJE
+
+    $('.btnDeleteHosp').on('click', function () {
+        var idHosp = $(this).find('.idHosp').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+
+    // HABILITAR HOSPEDAJE
+
+    $('.btnHabilitarHosp').on('click', function () {
+        var idHosp = $(this).find('.idHosp').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
         $.ajax({
             url: url,
             success: function (data) {

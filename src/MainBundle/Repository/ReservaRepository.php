@@ -21,5 +21,13 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findOneByReserva($idHospedaje){
+        $dql = 'SELECT r FROM MainBundle:Reserva r WHERE r.hospedaje = :idHospedaje';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':idHospedaje', $idHospedaje)
+            ->getResult();
+    }
+
 
 }

@@ -60,7 +60,7 @@
             </div>
             <div id="previa">
                 <div>
-                    <img src="" width="400"	height="700" id="imgFull">
+                    <img src="" width="350"	height="600" id="imgFull">
                 </div>
             </div>
 
@@ -86,7 +86,7 @@
                         <textarea name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
                         <input type="hidden" name="id" value="{{ hospedaje.id }}">
                         <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
-                        <button id="responderConsulta" type="submit"> Enviar</button>
+                        <button class="btn btn-small btn-primary" id="responderConsulta" type="submit"> Enviar</button>
                     </form>
                 {% endif %}
             {% endfor %}

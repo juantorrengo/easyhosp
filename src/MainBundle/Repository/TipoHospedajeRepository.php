@@ -24,4 +24,12 @@ class TipoHospedajeRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter(':nombre', $nombre)
             ->getOneOrNullResult();
     }
+
+    public function findByName ($nombre) {
+        $dql = 'SELECT th FROM MainBundle:TipoHospedaje th WHERE (th.borrado = 0 AND th.nombre = :nombre)';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':nombre', $nombre)
+            ->getResult();
+    }
 }

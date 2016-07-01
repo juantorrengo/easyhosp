@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Habilitar Hospedaje</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" id="formHabilitarHosp" action="{{ path('hospedajeHabilitar') }}" method="POST">
+        <input type="hidden" name="idHospedaje" value="{{ hospedaje.id }}">
+        Seguro que desea habilitar el Hospedaje <strong>{{ hospedaje.titulo }}</strong>?
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="aceptarHabilitarHosp" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+    $('#aceptarHabilitarHosp').on('click', function (event) {
+        event.preventDefault();
+        $('#formHabilitarHosp').submit();
+    });
+</script>

@@ -1,28 +1,56 @@
-<table class="table table-hover table-bordered">
-    <thead>
-    <tr class="beGrey">
-        <th></th>
-        <th>Título</th>
-        <th>Fecha publicación</th>
-        <th>Dirección</th>
-        <th>Precio</th>
-        <th>Capacidad</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for hospedaje in hospedajes%}
-        <tr>
-            <td></td>
-            <td>{{ hospedaje.titulo }}</td>
-            <td>{{ hospedaje.fechaPublicacion|date('d-m-Y') }}</td>
-            <td>{{ hospedaje.direccion }}</td>
-            <td>${{ hospedaje.precio }}</td>
-            <td>{{ hospedaje.capacidad }}</td>
-            <td><a class="btn btn-primary" href="#">Ver</a>
-                <a class="btn btn-warning" href="#">Editar</a>
-                <a class="btn btn-danger" href="#">Eliminar</a></td>
+<div class="table-responsive col-lg-12">
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr class="beGrey">
+            <th></th>
+            <th>Título</th>
+            <th>Fecha publicación</th>
+            <th>Dirección</th>
+            <th>Precio</th>
+            <th>Capacidad</th>
+            <th>Disponible</th>
+            <th>Acciones</th>
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        {% for hospedaje in hospedajes%}
+            {% if hospedaje.borrado != 2 %}
+            <tr>
+                <td></td>
+                <td>{{ hospedaje.titulo }}</td>
+                <td>{{ hospedaje.fechaPublicacion|date('d-m-Y') }}</td>
+                <td>{{ hospedaje.direccion }}</td>
+                <td>${{ hospedaje.precio }}</td>
+                <td>{{ hospedaje.capacidad }}</td>
+                {% if hospedaje.borrado ==  1  %}
+                    <td> NO </td>
+                {% else %}
+                    <td> SI </td>
+                {% endif %}
+                <td>
+                    <a class="btn btn-primary" href="{{ path('detalleHosp', {'id':hospedaje.id}) }}" >Ver</a>
+
+                    <a href="#" data-path="{{ path('hospedajeEdit', { 'id': 'x'}) }}" class="btnDeleteHosp btn btn-sm btn-warning">
+                        Editar
+                        <input type="hidden" class="idHosp" value="{{ hospedaje.id }}">
+                    </a>
+
+                    {% if hospedaje.borrado ==  1  %}
+                        <a href="#" data-path="{{ path('hospedajeMsjHabilitar', { 'id': 'x'}) }}" class="btnDeleteHosp btn btn-sm btn-success">
+                            Habilitar
+                            <input type="hidden" class="idHosp" value="{{ hospedaje.id }}">
+                        </a>
+                    {% else %}
+                        <a href="#" data-path="{{ path('hospedajeMsjDelete', { 'id': 'x'}) }}" class="btnDeleteHosp btn btn-sm btn-danger btn-delete">
+                            Eliminar
+                            <input type="hidden" class="idHosp" value="{{ hospedaje.id }}">
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
