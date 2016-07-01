@@ -126,14 +126,22 @@ class TipoHospedajeController extends Controller
         try{
             $em = $this->getDoctrine()->getManager();
             $tipo = $em->getRepository($this->repositorio)->findOneById($request->get('idTipo'));
-            $tipo->setNombre($request->get('nombre'));
             $em = $this->getDoctrine()->getManager();
-            $em->persist($tipo);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipo->getNombre().' fue editado correctamente.');
-            return $this->redirect($this->generateUrl('tipoHosp'));
+            $existe = $em->getRepository($this->repositorio)->findByName($request->get('nombre'));
+            if (!$existe){
+                $tipo->setNombre($request->get('nombre'));
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($tipo);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipo->getNombre().' fue editado correctamente.');
+                return $this->redirect($this->generateUrl('tipoHosp'));
+            }else{
+                $this->get('session')->getFlashBag()->add('error', 'Error el tipo de hospedaje ya existe');
+                return $this->redirect($this->generateUrl('tipoHosp'));
+            }
+
         }catch (Exception $e){
-            $this->get('session')->getFlashBag()->add('error', 'Error al edtar tipo de hospedaje, intente nuevamente.');
+            $this->get('session')->getFlashBag()->add('error', 'Error al editar tipo de hospedaje, intente nuevamente.');
             return $this->redirect($this->generateUrl('tipoHosp'));
         }
     }
