@@ -15,6 +15,7 @@
     </thead>
     <tbody>
     {% for hospedaje in hospedajes %}
+        {% if hospedaje.borrado == 0 %}
         <tr>
             <td></td>
             <td>{{ hospedaje.titulo }}</td>
@@ -38,8 +39,8 @@
 
                 {% endif %}
             </td>
-
         </tr>
+        {% endif %}
     {% endfor %}
     </tbody>
 </table>
