@@ -351,7 +351,7 @@ class HospedajeController extends Controller
             $em = $this->getDoctrine()->getManager();
             $hospedajeDelete = $em->getRepository($this->repositorio)->findOneById($idHospedajeDelete);
             if(!$tieneReservas){
-                $hospedajeDelete->setBorrado(2);
+                $hospedajeDelete->setBorrado(1);
                 $em->persist($hospedajeDelete);
                 $em->flush();
                 $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeDelete->gettitulo().' fue borrado.');
