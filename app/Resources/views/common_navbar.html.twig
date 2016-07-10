@@ -14,7 +14,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if app.session.get('id') != "" %}
                 <li>
-                    <a href="#">Mis reservas</a>
+                    <a href="{{ path('misReservas') }}">Mis reservas</a>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hospedajes <b class="caret"></b></a>

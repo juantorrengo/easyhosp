@@ -1,0 +1,29 @@
+<div class="table-responsive col-lg-12">
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr class="beGrey">
+            <th></th>
+            <th>Título</th>
+            <th>Fecha Inicio</th>
+            <th>fecha Fin</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in reservas %}
+            <tr>
+                <td></td>
+                <td>{{ r.titulo }}</td>
+                <td>{{ r.fechaInicio|date("d/m/Y") }}</td>
+                <td>{{ r.fechaFin|date("d/m/Y") }}</td>
+                <td>${{ r.monto }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{ path('detalleHosp', {'id':r.hospId}) }}" >Ver</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

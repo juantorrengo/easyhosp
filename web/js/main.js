@@ -1,14 +1,4 @@
 $(document).ready(function() {
-    $("#imgg").on("click", function(){
-        var direccion = $(this).attr('src');
-        $("#imgFull").attr('src', direccion);
-        $("#previa").fadeIn();
-    });
-
-    $("#previa").on("click", function(){
-            $(this).fadeOut();
-    });
-
     $('.carousel').carousel({
         interval: 5000 //changes the speed
     });
@@ -16,7 +6,7 @@ $(document).ready(function() {
     blockStyle = {
         message: '',
         overlayCSS: { backgroundColor: '#fff', opacity:0 }
-    };
+    }
 
     $('#forgetPassCard').hide();
     
@@ -269,11 +259,49 @@ $(document).ready(function() {
                 maxlength: "Debe tener como máximo 10 caracteres"
             }
         }
-    });  
+    });
+    var desde, hasta, dias;
+    $(function() {
+        function getCurrentDate() {
+            var d = new Date();
 
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var date = ((''+month).length<2 ? '0' : '') + month +'/' +
+                ((''+day).length<2 ? '0' : '') + day + '/' + d.getFullYear();
+            return date;
+        }
 
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear',
+            },
+            minDate: getCurrentDate()
+        });
 
+        fullDisabled($('#btnSearchHosp'));
 
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            desde = picker.startDate.format('YYYY-MM-DD');
+            hasta = picker.endDate.format('YYYY-MM-DD');
+            $('#desde').val(desde);
+            $('#hasta').val(hasta);
+            fullEnabled($('#btnSearchHosp'));
+           
+        });
+        $('input[name="datefilter"]').on('change', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+            fullDisabled($('#btnSearchHosp'));
+        });
+    });
+
+    $('#msgConfirmReserva').hide();
 
     // LOGIN ,RECUPERO y USUARIO
     $('#aceptarLogin').on('click', function (event) {
@@ -418,229 +446,111 @@ $(document).ready(function() {
             }
         });
     });
-    // EDITAR HOSPEDAJE
-    $('.btnEditHosp').on('click', function (e) {
-        e.preventDefault();
-        var idHosp = $(this).find('.idHospedaje').val();
-        var url = $(this).attr('data-path');
-        url = url.replace('x', idHosp);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    alert(data.msg);
-                }else{
-                    $('#modal-form').find('.modal-content').html(data);
-                    $('#modal-form').modal();
-                }
+
+});//Fin ready
+
+//HOSPEDAJES
+
+var tablaHospedajes = $('#tablaHospedajes');
+
+$('#btnSearchHosp').on('click', function (e) {
+    e.preventDefault();
+    if($('#desde').val()=="" || $('#hasta').val()==""){
+        alert('Ingrese una fecha válida.');
+        return;
+    }
+    tablaHospedajes.block(blockStyle);
+    $.ajax({
+        url: Routing.generate('searchHosp'),
+        data: $('#searchForm').serialize(),
+        success: function (data) {
+            if(data.status == 400){
+                $('#ajaxAlerts').find('.close').next().html(data.msg);
+                $('#ajaxAlerts').show();
+                tablaHospedajes.unblock();
+            }else{
+                tablaHospedajes.html(data);
+                tablaHospedajes.unblock();
             }
-        });
-    });
-    // ELIMINAR HOSPEDAJE
-
-    $('.btnDeleteHosp').on('click', function () {
-        var idHosp = $(this).find('.idHosp').val();
-        var url = $(this).attr('data-path');
-        url = url.replace('x', idHosp);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    alert(data.msg);
-                }else{
-                    $('#modal-form').find('.modal-content').html(data);
-                    $('#modal-form').modal();
-                }
-            }
-        });
-    });
-
-    // HABILITAR HOSPEDAJE
-
-    $('.btnHabilitarHosp').on('click', function () {
-        var idHosp = $(this).find('.idHosp').val();
-        var url = $(this).attr('data-path');
-        url = url.replace('x', idHosp);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    alert(data.msg);
-                }else{
-                    $('#modal-form').find('.modal-content').html(data);
-                    $('#modal-form').modal();
-                }
-            }
-        });
-    });
-
-    //HOSPEDAJES
-
-    var tablaHospedajes = $('#tablaHospedajes');
-
-    $('#btnSearchHosp').on('click', function (e) {
-        e.preventDefault();
-        tablaHospedajes.block(blockStyle);
-        var buscado = $('#hospBuscado').val();
-        if(!buscado){
-            tablaHospedajes.unblock();
-            return;
         }
-        var url = $(this).attr('data-path');
-        url = url.replace('x', buscado);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                    $('#ajaxAlerts').show();
-                    tablaHospedajes.unblock();
-                }else{
-                    tablaHospedajes.html(data);
-                    tablaHospedajes.unblock();
-                }
-            }
-        });
     });
-
-    $('#btnCleanSearch').on('click', function (e) {
-        e.preventDefault();
-        $('#hospBuscado').val("");
-        tablaHospedajes.block(blockStyle);
-        var url = $(this).attr('data-path');
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                    tablaHospedajes.unblock();
-                }else{
-                    tablaHospedajes.html(data);
-                    tablaHospedajes.unblock();
-                }
-            }
-        });
-    });
-
-    tablaHospedajes.on('click', '.choisedPageHosp', function (e) {
-        e.preventDefault();
-        tablaHospedajes.block(blockStyle);
-        var page = $(this).find('#pagElegHosp').val();
-        var url = $('#hospIndexPath').attr('data-path');
-        url = url.replace('x', page);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                    tablaHospedajes.unblock();
-                }else{
-                    tablaHospedajes.html(data);
-                    tablaHospedajes.unblock();
-                }
-            }
-        });
-    });
-
-    tablaHospedajes.on('click', '.nextPageHosp', function (e) {
-        e.preventDefault();
-        tablaHospedajes.block(blockStyle);
-        var page = $(this).find('#pagSigHosp').val();
-        var url = $('#hospIndexPath').attr('data-path');
-        url = url.replace('x', page);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                    tablaHospedajes.unblock();
-                }else{
-                    tablaHospedajes.html(data);
-                    tablaHospedajes.unblock();
-                }
-            }
-        });
-    });
-
-    tablaHospedajes.on('click', '.verDetalle', function (e) {
-        e.preventDefault();
-        var id = $(this).attr('data-path');
-        var url = $('#hospDetalleIndexPath').attr('data-path');
-        url = url.replace('x', id);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                }else{
-                    $('#modal-form').find('.modal-content').html(data);
-                    $('#modal-form').modal();
-                }
-            }
-        });
-    });
-
-    function marcarFav(elem){
-        elem.addClass('unmarkFav');
-        elem.addClass('fa-star');
-        elem.removeClass('fa-star-o');
-        elem.removeClass('markFav');
-    }
-
-    function desmarcarFav(elem){
-        elem.removeClass('fa-star');
-        elem.removeClass('unmarkFav');
-        elem.addClass('fa-star-o');
-        elem.addClass('markFav');
-    }
-    
-    tablaHospedajes.on('click', '.markFav', function (e) {
-        e.preventDefault();
-        var self = $(this);
-        var hospId = self.attr('data-ref');
-        var url = $('#marcarFavPath').attr('data-path');
-        url = url.replace('x', hospId);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                }else{
-                    marcarFav(self);
-                }
-            }
-        });
-    });
-
-    tablaHospedajes.on('click', '.unmarkFav', function (e) {
-        e.preventDefault();
-        var self = $(this);
-        var hospId = self.attr('data-ref');
-        var url = $('#desmarcarFavPath').attr('data-path');
-        url = url.replace('x', hospId);
-        $.ajax({
-            url: url,
-            success: function (data) {
-                if(data.status == 400){
-                    $('#ajaxAlerts').find('.close').next().html(data.msg);
-                }else{
-                    desmarcarFav(self);
-                }
-            }
-        });
-    });
-
-    tablaHospedajes.on('click', '.prevPageHosp', function (e) {
-        e.preventDefault();
-        tablaHospedajes.block(blockStyle);
-        var page = $(this).find('#pagAntHosp').val();
-        var url = $('#hospIndexPath').attr('data-path');
-        url = url.replace('x', page);
-        tablaHospedajes.load(url, function(){
-            tablaHospedajes.unblock();
-        });
-    });
-
-
-
 });
+
+tablaHospedajes.on('click', '.verDetalle', function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-path');
+    var desde = $('#desde').val();
+    var hasta = $('#hasta').val();
+    $.ajax({
+        url: Routing.generate('detalleHosp', {'id':id, 'desde':desde, 'hasta':hasta}),
+        success: function (data) {
+            if(data.status == 400){
+                $('#ajaxAlerts').find('.close').next().html(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    });
+});
+
+
+tablaHospedajes.on('click', '.markFav', function (e) {
+    e.preventDefault();
+    tablaHospedajes.block(blockStyle);
+    var self = $(this);
+    var hospId = self.attr('data-ref');
+    $.ajax({
+        url: Routing.generate('marcarFav', {'id': hospId}),
+        success: function (data) {
+            if(data.status == 400){
+                $('#ajaxAlerts').find('.close').next().html(data.msg);
+                tablaHospedajes.unblock();
+            }else{
+                marcarFav(self);
+                tablaHospedajes.unblock();
+            }
+        }
+    });
+});
+
+tablaHospedajes.on('click', '.unmarkFav', function (e) {
+    e.preventDefault();
+    tablaHospedajes.block(blockStyle);
+    var self = $(this);
+    var hospId = self.attr('data-ref');
+    $.ajax({
+        url: Routing.generate('desmarcarFav', {'id': hospId}),
+        success: function (data) {
+            if(data.status == 400){
+                $('#ajaxAlerts').find('.close').next().html(data.msg);
+                tablaHospedajes.unblock();
+            }else{
+                desmarcarFav(self);
+                tablaHospedajes.unblock();
+            }
+        }
+    });
+});
+
+function marcarFav(elem){
+    elem.addClass('unmarkFav');
+    elem.addClass('fa-star');
+    elem.removeClass('fa-star-o');
+    elem.removeClass('markFav');
+}
+
+function desmarcarFav(elem){
+    elem.removeClass('fa-star');
+    elem.removeClass('unmarkFav');
+    elem.addClass('fa-star-o');
+    elem.addClass('markFav');
+}
+
+function fullDisabled(elem){
+    elem.prop('disabled', true);
+}
+
+function fullEnabled(elem){
+    elem.prop('disabled', false);
+}

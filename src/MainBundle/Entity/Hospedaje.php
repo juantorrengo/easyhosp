@@ -37,13 +37,6 @@ class Hospedaje
     private $descripcion;
 
     /**
-     * @var \Date
-     *
-     * @ORM\Column(name="fechaPublicacion", type="date")
-     */
-    private $fechaPublicacion;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="borrado", type="integer", length=1,  options={"default" = 0})
@@ -226,30 +219,6 @@ class Hospedaje
     public function getDescripcion()
     {
         return $this->descripcion;
-    }
-
-    /**
-     * Set fechaPublicacion
-     *
-     * @param \Date $fechaPublicacion
-     *
-     * @return Hospedaje
-     */
-    public function setFechaPublicacion($fechaPublicacion)
-    {
-        $this->fechaPublicacion = $fechaPublicacion;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaPublicacion
-     *
-     * @return \Date
-     */
-    public function getFechaPublicacion()
-    {
-        return $this->fechaPublicacion;
     }
 
     /**

@@ -58,6 +58,14 @@ class Usuario
     private $email;
 
     /**
+     * @var \Date
+     *
+     * @ORM\Column(name="fechaAlta", type="date")
+     */
+    private $fechaAlta;
+
+
+    /**
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
@@ -564,5 +572,21 @@ class Usuario
     public function setPreguntaSecreta($preguntaSecreta)
     {
         $this->preguntaSecreta = $preguntaSecreta;
+    }
+
+    /**
+     * @return \Date
+     */
+    public function getFechaAlta()
+    {
+        return $this->fechaAlta;
+    }
+
+    /**
+     * @param \Date $fechaAlta
+     */
+    public function setFechaAlta($fechaAlta)
+    {
+        $this->fechaAlta = $fechaAlta;
     }
 }

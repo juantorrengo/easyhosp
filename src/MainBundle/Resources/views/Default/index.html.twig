@@ -9,9 +9,9 @@
     </div>
     <div id="barraBusqueda">
         <nav class="navbar">
-            <form class="navbar-form navbar-left" id="searchForm" role="search" style="margin-left: -16px">
+            <form class="navbar-form navbar-left" method="POST" id="searchForm" action="{{ path('searchHosp') }}" role="search" style="margin-left: -16px">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título" disabled>
+                   {# <input type="text" class="form-control" name="titulo" id="titulo" placeholder="Título" disabled>
                     <input type="text" class="form-control" name="localida" id="localidad" placeholder="Localidad" disabled>
                     <input type="number" class="form-control" name="capacidad" id="capacidad" placeholder="Capacidad" disabled>
                     <select class="form-control" name="tipohospedaje" id="tipohospedaje" disabled>
@@ -19,7 +19,7 @@
                         {% for tipo in tipos %}
                             <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
                         {% endfor %}
-                    </select>
+                    </select>#}
                     <input type="text" class="form-control" name="datefilter" id="fechas" value="" placeholder="Fecha" />
                     <input type="hidden" name="desde" id="desde" value="">
                     <input type="hidden" name="hasta" id="hasta" value="">
@@ -31,7 +31,9 @@
         </nav>
     </div>
     <div id="tablaHospedajes">
-        {% include 'MainBundle:Default:tablaHospedajes.html.twig' %}
+        {% if hospedajes is defined %}
+            {% include 'MainBundle:Default:tablaHospedajes.html.twig' %}
+        {% endif %}
     </div>
     {% include 'MainBundle:Utils:modal.html.twig' %}
 {% endblock %}

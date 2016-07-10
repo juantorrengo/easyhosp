@@ -4,6 +4,7 @@ namespace MainBundle\Controller;
 
 use Doctrine\ORM\ORMException;
 use MainBundle\Entity\Usuario;
+use MainBundle\MainBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,11 +14,12 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="home", defaults={"page" = 1})
+     * @Route("/", name="home")
      */
-    public function indexAction(Request $request,$page)
+    public function indexAction(Request $request)
     {
-        $nextPage = $page + 1;
+        return $this->render('MainBundle:Default:index.html.twig');
+        /*$nextPage = $page + 1;
         $prevPage = $page - 1;
         $pageSize=10;
         $em = $this->getDoctrine()->getManager();
@@ -37,16 +39,6 @@ class DefaultController extends Controller
         }else{
             return $this->render('MainBundle:Default:index.html.twig', array('hospedajes'=>$hospedajes,
                 "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems, "tipos"=>$tipos));
-        }
-    }
-
-    private function checkSession(Request $request){
-        $session = $request->getSession();
-        if($session->has("id")){
-            $condicion = true;
-        }else{
-            $condicion = false;
-        }
-        return $condicion;
+        }*/
     }
 }

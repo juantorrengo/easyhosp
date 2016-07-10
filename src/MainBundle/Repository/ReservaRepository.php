@@ -10,15 +10,20 @@ namespace MainBundle\Repository;
  */
 class ReservaRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findDisponibilidad($from, $to, $id){
-        $dql = 'SELECT r, r.id, r.fechaFin, r.fechaInicio FROM MainBundle:Reserva r 
-                WHERE ((r.fechaInicio <= :desde AND r.fechaFin >= :desde AND r.hospedaje = :id) OR 
-                      ( r.fechaInicio <= :hasta AND r.fechaFin >= :hasta AND r.hospedaje = :id) OR 
-                      ( r.fechaInicio > :desde AND r.fechaFin < :hasta AND r.hospedaje = :id))';
+    public function findDisponibilidad($from, $to){
+        $dql = 'SELECT h, h.borrado, h.titulo, h.id, h.direccion, h.localidad, h.descripcion, h.capacidad, h.precio, th.nombre as tipoHosp
+                FROM MainBundle:Hospedaje h 
+                INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id
+                WHERE h.id NOT IN (
+                SELECT IDENTITY (r.hospedaje) FROM MainBundle:Reserva r 
+                WHERE ((r.fechaInicio <= :desde AND r.fechaFin >= :desde) OR 
+                      ( r.fechaInicio <= :hasta AND r.fechaFin >= :hasta) OR 
+                      ( r.fechaInicio > :desde AND r.fechaFin < :hasta))
+                )';
         return $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameters(['desde'=>$from, 'hasta'=>$to, 'id'=>$id])
-            ->getOneOrNullResult();
+            ->setParameters(['desde'=>$from, 'hasta'=>$to])
+            ->getResult();
     }
 
     public function findOneByReserva($idHospedaje){
@@ -29,5 +34,17 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
+
+    public function findMisReservas($userId){
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje), r.monto, r.confirmada, h.titulo as titulo, 
+                h.id as hospId, h.borrado as borrado 
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE (r.usuario = :userId AND r.confirmada = 0)';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':userId', $userId)
+            ->getResult();
+    }
 
 }

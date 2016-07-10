@@ -1,91 +1,71 @@
-{% extends 'base.html.twig' %}
-{% block content %}
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">{{ hospedaje.titulo }}</h4>
+</div>
+<div class="modal-body">
     <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">
-                {{ hospedaje.titulo }}
-            </h1>
-        </div>
-    </div>
-    <div id="content">
-        <input type="hidden" id="hospId" value="{{ hospedaje.id }}" />
-        <input type="hidden" id="precioDia" value="{{ hospedaje.precio }}" />
-        <dl class="dl-horizontal col-lg-6">
+        <dl class="col-lg-6">
             <dt>Descripción</dt>
             <dd>{{ hospedaje.descripcion}}</dd>
-            <dd></dd>
             <dt>Tipo</dt>
             <dd>{{ hospedaje.tipoHosp}}</dd>
             <dt>Localidad</dt>
             <dd>{{ hospedaje.localidad}}</dd>
-            <dt>Fecha publicación</dt>
-            <dd>{{ hospedaje.fechaPublicacion|date('d-m-Y')}}</dd>
             <dt>Dirección</dt>
             <dd>{{ hospedaje.direccion}}</dd>
             <dt>Capacidad</dt>
             <dd>{{ hospedaje.capacidad}} personas.</dd>
             <dt>Precio (Por día)</dt>
             <dd>${{ hospedaje.precio}}</dd>
-            <dt>Dueño</dt>
-            <dd>{{ hospedaje.userNom}}, {{ hospedaje.userApe }}</dd>
         </dl>
-        <div class="row">
-            <div class="col-lg-6">
-                <h4>Verificar disponibilidad</h4>
-                <form action="{{ path('reservar') }}" method="POST">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="datefilterDetail" id="fechasDetail" value="" placeholder="Fecha" />
-                        <input type="hidden" name="desde" value="">
-                        <input type="hidden" name="hasta" value="">
-                        <input type="hidden" name="hospId" id="hospId" value="{{ hospedaje.id }}" />
-                        <input type="hidden" name="monto" id="monto" value="" />
-                        <input type="hidden" name="user" id="user" value="{{ hospedaje.userId }}" />
-                    </div>
-                    <div id="dispMsg"></div>
-                    <div class="row hidden" id="divReserva">
-                        <div id="datosReserva"></div>
-                        <div><small id="msgCondicion" class="oblique">Al reservar un hospedaje, deberá aguardar a que la reserva sea aceptada. Una vez aceptada, le daremos la información del dueño para
-                                que se pueda contactar.</small>
-                        </div>
-                        <button id="btn-reserva" class=" btn btn-success btn-sm" type="submit">Reservar</button>
-                    </div>
+        <dl class="col-lg-6">
+            <dt>Fechas buscadas</dt>
+            <dd>{{ desde|date("d/m/Y") }} hasta {{ hasta|date("d/m/Y") }}</dd>
+            <dt>Monto Total:</dt>
+            <dd>${{ monto }}</dd>
+            {% if app.session.get('id') != "" %}
+                <form action="{{ path('reservarHosp') }}" method="POST" name="formReservar">
+                    <input type="hidden" name="fechaDesde" value="{{ desde }}">
+                    <input type="hidden" name="fechaHasta" value="{{ hasta }}">
+                    <input type="hidden" name="hospID" value="{{ hospedaje.id }}">
+                    <input type="hidden" name="user" value="{{ app.session.get('id') }}">
+                    <input type="hidden" name="monto" value="{{ monto }}">
+                    <span class="oblique">Al aceptar deberá esperar la confirmación del dueño. Una vez confirmada la reserva,
+                    obtendrá los datos para ponerse en contacto.</span>
+                    <br>
+                    <button type="submit" class="btn btn-success small">Reservar</button>
                 </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="page-header">
-                    <h3>Galería</h3>
-                </div>
-            </div>
-            <div id="previa">
-                <div>
-                    <img src="" width="350"	height="600" id="imgFull">
-                </div>
-            </div>
+            {% endif %}
+        </dl>
+    </div>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h3>Galería</h3>
+            </div>
             <div id="container">
-                <img id="imgg" class="img-rounded" src="{{ asset('images/japon.jpg') }}"     alt="japon" />
+                <img id="img" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="japon" />
                 <img class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="nuevayork" />
                 <img class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="patagonia" />
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="page-header">
-                    <h3>Preguntas</h3>
-                </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h3>Preguntas</h3>
             </div>
             {% for consulta in consultas %}
-                <br>
-                <dd>{{ consulta.pregunta }} </dd>
+                <dd><b>Pregunta:</b> {{ consulta.pregunta }} </dd>
                 {% if consulta.respuesta != "" %}
-                    <dd> {{ consulta.respuesta }} </dd>
+                    <dd><b>Respuesta:</b> {{ consulta.respuesta }} </dd>
                 {% elseif app.session.get('nombre') == hospedaje.userNom %}
                     <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
                         <textarea name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
                         <input type="hidden" name="id" value="{{ hospedaje.id }}">
-                        <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
+                        <label>Pregunta</label><input type="hidden" name="idConsulta" value="{{ consulta.id }}">
                         <button class="btn btn-small btn-primary" id="responderConsulta" type="submit"> Enviar</button>
                     </form>
                 {% endif %}
@@ -99,6 +79,16 @@
                 </form>
             {% endif %}
         </div>
-    </div>
 
-{% endblock %}
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="aceptarNewHosp" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>

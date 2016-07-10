@@ -18,6 +18,16 @@ class HospedajeController extends Controller
 {
     private $repositorio = 'MainBundle:Hospedaje';
 
+    private function checkSession(Request $request){
+        $session = $request->getSession();
+        if($session->has("id")){
+            $condicion = true;
+        }else{
+            $condicion = false;
+        }
+        return $condicion;
+    }
+
     /**
      * @Route("/misHospedajes", name="misHospedajes")
     */
@@ -33,45 +43,6 @@ class HospedajeController extends Controller
             return $this->render('MainBundle:Security:login.html.twig');
         }
     }
-
-    /* /**
-     * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
-
-    public function nuevoHospedajeAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
-        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos'=>$tipos));
-
-        $hosp = new Hospedaje();
-        $formHosp = $this->createForm(HospedajeType::class, $hosp);
-        $formHosp->handleRequest($request);
-        if($formHosp->isValid()){
-            $hosp->setFile($request->files->get('imagen'));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($hosp);
-            $em->flush();
-        }
-        return $this->render('MainBundle:Hospedaje:formPrueba.html.twig', array(
-            'form' => $formHosp->createView(),
-        ));
-    } */
-
-    /*
-    /**
-     * @Route("/hospSave", name="hospSave", options={"expose"=true})
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-
-    public function hospSaveAction(Request $request){
-        /**
-         * @var UploadedFile $file
-
-        $file = $request->files->all();
-        $filename = $file->getClientOriginalName();
-        $response = new Response(json_encode($filename));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-
-    } */
 
     /**
      * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
@@ -105,7 +76,6 @@ class HospedajeController extends Controller
             $hospedaje->setBorrado(0);
             $hospedaje->setUsuario($usuario);
             $hospedaje->setTipohospedaje($tipo);
-            $hospedaje->setFechaPublicacion(new \DateTime($request->get("now")));
             $em = $this->getDoctrine()->getManager();
             $em->persist($hospedaje);
             $em->flush();
@@ -201,28 +171,39 @@ class HospedajeController extends Controller
     }
 
     /**
-     * @Route("/detalleHosp/{id}", name="detalleHosp")
+     * @Route("/detalleHosp/{id}/{desde}/{hasta}",options={"expose"=true}, name="detalleHosp",
+     *     defaults={"desde" = 1, "hasta" = 1})
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
 
-    public function detalleHospAction($id)
+    public function detalleHospAction($id, $desde, $hasta)
     {
         try{
+
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findDetalleHospedaje($id);
+            $monto = $this->calcularMontoTotal($hospedaje["precio"],$hasta, $desde);
             $em = $this->getDoctrine()->getManager();
             $consultas = $em->getRepository('MainBundle:Consulta')->findBy(array('hospedaje'=>$id));
             if(!$hospedaje){
                 $this->get('session')->getFlashBag()->add('error', 'Error al recuperar el detalle del hospedaje, intente nuevamente.');
                 return $this->redirect($this->generateUrl('home'));
             }else{
-                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas));
+                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas, 'desde'=>$desde, 'hasta'=>$hasta,
+                    'monto'=>$monto));
             }
         }catch (ORMException $e){
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, por favor intente nuevamente');
             return $this->redirect($this->generateUrl('home'));
         }
+    }
+
+    private function calcularMontoTotal($precio,$fecha1,$fecha2){
+        $segundos = strtotime($fecha1) - strtotime($fecha2);
+        $dias = intval($segundos/60/60/24);
+        $total = $precio * $dias;
+        return $total;
     }
 
     /**
@@ -254,24 +235,28 @@ class HospedajeController extends Controller
     }
 
     /**
-     * @Route("/searchHosp/{desde}/{hasta}", name="searchHosp",options={"expose"=true}, defaults={"page" = 1})
+     * @Route("/searchHosp", name="searchHosp",options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function searchHospAction(Request $request, $page, $desde, $hasta)
+    public function searchHospAction(Request $request)
     {
         try{
-            $nextPage = $page + 1;
-            $prevPage = $page - 1;
-            $pageSize=10;
             $em = $this->getDoctrine()->getManager();
-            $hospedajes = $em->getRepository('MainBundle:Hospedaje')->buscarHospPaginated($pageSize, $page, $desde, $hasta);
+            $desde = $request->get('desde');
+            $hasta = $request->get('hasta');
+            $hospedajes = $em->getRepository('MainBundle:Reserva')->findDisponibilidad($desde, $hasta);
             if(!$hospedajes){
                 $array = array('status'=> 400, 'msg'=>'Hospedajes no encontrados');
             }else{
-                $totalItems = count($hospedajes);
-                $pagesCount = ceil($totalItems / $pageSize);
-                return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes'=>$hospedajes,
-                    "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems));
+                if(self::checkSession($request)) {
+                    $session = $request->getSession();
+                    $userId = $session->get('id');
+                    $em = $this->getDoctrine()->getManager();
+                    $favoritos = $em->getRepository('MainBundle:Favorito')->findBy(array('usuario' => $userId));
+                    return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes' => $hospedajes, 'favoritos' => $favoritos));
+                }else{
+                    return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes'=>$hospedajes));
+                }
             }
         }catch (Exception $e){
             $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');

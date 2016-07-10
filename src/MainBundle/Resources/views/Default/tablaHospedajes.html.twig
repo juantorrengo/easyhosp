@@ -25,7 +25,7 @@
             <td>{{ hospedaje.direccion }}</td>
             <td>${{ hospedaje.precio }}</td>
             <td>{{ hospedaje.capacidad }} personas.</td>
-            <td><a class="btn btn-primary" href="{{ path('detalleHosp', {'id':hospedaje.id}) }}" >Ver</a>
+            <td><a class="btn btn-primary verDetalle" data-path="{{ hospedaje.id }}" >Ver</a>
                 {% if app.session.get('id') != "" %}
                     {% set count = 0 %}
                     {% for favorito in favoritos %}
@@ -46,5 +46,5 @@
     </tbody>
 </table>
 <div class="row">
-    {% include 'MainBundle:Default:paginadoHospedajes.html.twig' %}
+    {#{% include 'MainBundle:Default:paginadoHospedajes.html.twig' %}#}
 </div>
