@@ -5,6 +5,8 @@
 <div class="modal-body">
     <div class="row">
         <dl class="col-lg-6">
+            <h4>Datos</h4>
+            <hr>
             <dt>Descripción</dt>
             <dd>{{ hospedaje.descripcion}}</dd>
             <dt>Tipo</dt>
@@ -15,25 +17,26 @@
             <dd>{{ hospedaje.direccion}}</dd>
             <dt>Capacidad</dt>
             <dd>{{ hospedaje.capacidad}} personas.</dd>
-            <dt>Precio (Por día)</dt>
-            <dd>${{ hospedaje.precio}}</dd>
         </dl>
         <dl class="col-lg-6">
+            <h4>Reserva</h4>
+            <hr>
             <dt>Fechas buscadas</dt>
             <dd>{{ desde|date("d/m/Y") }} hasta {{ hasta|date("d/m/Y") }}</dd>
-            <dt>Monto Total:</dt>
-            <dd>${{ monto }}</dd>
             {% if app.session.get('id') != "" %}
                 <form action="{{ path('reservarHosp') }}" method="POST" name="formReservar">
                     <input type="hidden" name="fechaDesde" value="{{ desde }}">
                     <input type="hidden" name="fechaHasta" value="{{ hasta }}">
                     <input type="hidden" name="hospID" value="{{ hospedaje.id }}">
                     <input type="hidden" name="user" value="{{ app.session.get('id') }}">
-                    <input type="hidden" name="monto" value="{{ monto }}">
-                    <span class="oblique">Al aceptar deberá esperar la confirmación del dueño. Una vez confirmada la reserva,
-                    obtendrá los datos para ponerse en contacto.</span>
-                    <br>
-                    <button type="submit" class="btn btn-success small">Reservar</button>
+                    {% if app.session.get('id') == hospedaje.userId %}
+                        <span class="oblique">No puede reservar un hospedaje que le pertenece a uno mismo.</span>
+                    {% else %}
+                        <span class="oblique">Al aceptar deberá esperar la confirmación del dueño. Una vez confirmada la reserva,
+                        obtendrá los datos para ponerse en contacto.</span>
+                        <br>
+                        <button type="submit" class="btn btn-success small">Reservar</button>
+                    {% endif %}
                 </form>
             {% endif %}
         </dl>

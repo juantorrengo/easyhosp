@@ -71,7 +71,6 @@ class HospedajeController extends Controller
             $hospedaje->setDescripcion($request->get('descripcion'));
             $hospedaje->setDireccion($request->get('direccion'));
             $hospedaje->setLocalidad($request->get('localidad'));
-            $hospedaje->setPrecio($request->get('precio'));
             $hospedaje->setCapacidad($request->get('capacidad'));
             $hospedaje->setBorrado(0);
             $hospedaje->setUsuario($usuario);
@@ -183,27 +182,18 @@ class HospedajeController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findDetalleHospedaje($id);
-            $monto = $this->calcularMontoTotal($hospedaje["precio"],$hasta, $desde);
             $em = $this->getDoctrine()->getManager();
             $consultas = $em->getRepository('MainBundle:Consulta')->findBy(array('hospedaje'=>$id));
             if(!$hospedaje){
                 $this->get('session')->getFlashBag()->add('error', 'Error al recuperar el detalle del hospedaje, intente nuevamente.');
                 return $this->redirect($this->generateUrl('home'));
             }else{
-                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas, 'desde'=>$desde, 'hasta'=>$hasta,
-                    'monto'=>$monto));
+                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas, 'desde'=>$desde, 'hasta'=>$hasta));
             }
         }catch (ORMException $e){
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, por favor intente nuevamente');
             return $this->redirect($this->generateUrl('home'));
         }
-    }
-
-    private function calcularMontoTotal($precio,$fecha1,$fecha2){
-        $segundos = strtotime($fecha1) - strtotime($fecha2);
-        $dias = intval($segundos/60/60/24);
-        $total = $precio * $dias;
-        return $total;
     }
 
     /**

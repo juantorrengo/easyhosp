@@ -11,7 +11,7 @@ namespace MainBundle\Repository;
 class ReservaRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findDisponibilidad($from, $to){
-        $dql = 'SELECT h, h.borrado, h.titulo, h.id, h.direccion, h.localidad, h.descripcion, h.capacidad, h.precio, th.nombre as tipoHosp
+        $dql = 'SELECT h, h.borrado, h.titulo, h.id, h.direccion, h.localidad, h.descripcion, h.capacidad, th.nombre as tipoHosp
                 FROM MainBundle:Hospedaje h 
                 INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id
                 WHERE h.id NOT IN (
@@ -36,15 +36,77 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
 
 
     public function findMisReservas($userId){
-        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje), r.monto, r.confirmada, h.titulo as titulo, 
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje), r.estado, h.titulo as titulo, 
                 h.id as hospId, h.borrado as borrado 
                 FROM MainBundle:Reserva r 
                 INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
-                WHERE (r.usuario = :userId AND r.confirmada = 0)';
+                WHERE (r.usuario = :userId AND r.fechaFin > CURRENT_DATE())';
         return $this->getEntityManager()
             ->createQuery($dql)
             ->setParameter(':userId', $userId)
             ->getResult();
+    }
+
+    public function findResFinalizadas($userId){
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje),r.estado, h.titulo as titulo, 
+                h.id as hospId, h.borrado as borrado 
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE (h.usuario = :userId AND r.fechaFin < CURRENT_DATE())';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':userId', $userId)
+            ->getResult();
+    }
+    
+    public function findResSinConf($userId){
+    $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje),r.estado , h.titulo as titulo, 
+                h.id as hospId, h.borrado as borrado 
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE (h.usuario = :userId)';
+    return $this->getEntityManager()
+        ->createQuery($dql)
+        ->setParameter(':userId', $userId)
+        ->getResult();
+    }
+
+    public function findDatosCalificarRes($resId){
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje),r.estado , h.titulo as titulo, 
+                h.id as hospId
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE (r.id = :resId)';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':resId', $resId)
+            ->getOneOrNullResult();
+    }
+
+    public function findDetalleReserva($id){
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje), r.estado, h.titulo as titulo, 
+                h.id as hospId, h.borrado as borrado 
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE r.usuario = :id';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':id', $id)
+            ->getOneOrNullResult();
+    }
+
+    public function findDatosReserva($id){
+        $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje), r.estado, h.titulo as titulo, 
+                h.id as hospId, IDENTITY (r.usuario), u.nombre as nombre, u.apellido as apellido, u.email as email,
+                u.telefono as telefono
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                INNER JOIN MainBundle:Usuario u WITH r.usuario = u.id
+                WHERE r.id = :id';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':id', $id)
+            ->getOneOrNullResult();
     }
 
 }

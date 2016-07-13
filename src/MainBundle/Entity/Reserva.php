@@ -36,19 +36,13 @@ class Reserva
      */
     private $fechaFin;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="monto", type="integer")
-     */
-    private $monto;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="confirmada", type="integer", length=1,  options={"default" = 0})
+     * @ORM\Column(name="estado", type="integer", length=1,  options={"default" = 0})
      */
-    private $confirmada;
+    private $estado;
 
     /**
      * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="reservas")
@@ -73,31 +67,6 @@ class Reserva
         return $this->id;
     }
 
-    
-
-    /**
-     * Set monto
-     *
-     * @param integer $monto
-     *
-     * @return Reserva
-     */
-    public function setMonto($monto)
-    {
-        $this->monto = $monto;
-
-        return $this;
-    }
-
-    /**
-     * Get monto
-     *
-     * @return int
-     */
-    public function getMonto()
-    {
-        return $this->monto;
-    }
 
     /**
      * Set usuario
@@ -180,18 +149,18 @@ class Reserva
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getConfirmada()
+    public function getEstado()
     {
-        return $this->confirmada;
+        return $this->estado;
     }
 
     /**
-     * @param mixed $confirmada
+     * @param int $estado
      */
-    public function setConfirmada($confirmada)
+    public function setEstado($estado)
     {
-        $this->confirmada = $confirmada;
+        $this->estado = $estado;
     }
 }

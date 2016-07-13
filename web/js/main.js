@@ -533,6 +533,134 @@ tablaHospedajes.on('click', '.unmarkFav', function (e) {
     });
 });
 
+//RESERVAS
+
+var tablaReservas = $('#tablaReservas');
+
+    function setAsActive(elem){
+        var prev = $('#navRes').find('.active');
+        elem.parent().addClass('active');
+        prev.removeClass('active');
+    }
+
+$('#reservasParaConfirmar').on('click', function (e) {
+    e.preventDefault();
+    tablaReservas.block(blockStyle);
+    setAsActive($(this));
+    $.ajax({
+        url:Routing.generate('resSinConf'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaReservas.unblock();
+            }else{
+                tablaReservas.html(data);
+                tablaReservas.unblock();
+            }
+        }
+    });
+});
+
+$('#misReservasFin').on('click', function (e) {
+    e.preventDefault();
+    tablaReservas.block(blockStyle);
+    setAsActive($(this));
+    $.ajax({
+        url:Routing.generate('resFinalizadas'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaReservas.unblock();
+            }else{
+                tablaReservas.html(data);
+                tablaReservas.unblock();
+            }
+        }
+    });
+});
+
+$('#misReservas').on('click', function (e) {
+    e.preventDefault();
+    tablaReservas.block(blockStyle);
+    setAsActive($(this));
+    $.ajax({
+        url:Routing.generate('misReservasAjax'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaReservas.unblock();
+            }else{
+                tablaReservas.html(data);
+                tablaReservas.unblock();
+            }
+        }
+    });
+});
+
+
+tablaReservas.on('click', '.calificar', function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-path');
+    $.ajax({
+        url: Routing.generate('formCalificar', {'id':id}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    });
+});
+
+
+tablaReservas.on('click', '.confirmar', function (e) {
+    e.preventDefault();
+    $.ajax({
+        url:Routing.generate('msgConRes', {'id':$(this).attr('data-path')}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    })
+});
+
+tablaReservas.on('click', '.rechazar', function (e) {
+    e.preventDefault();
+    $.ajax({
+        url:Routing.generate('msgRechRes', {'id':$(this).attr('data-path')}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    })
+});
+
+tablaReservas.on('click', '.verDetalles', function(e){
+    e.preventDefault();
+    var resId = $(this).attr('data-path');
+    $.ajax({
+        url:Routing.generate('detallesReserva', {'id': resId}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    })
+});
+
 function marcarFav(elem){
     elem.addClass('unmarkFav');
     elem.addClass('fa-star');

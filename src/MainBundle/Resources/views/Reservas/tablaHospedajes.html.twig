@@ -7,7 +7,7 @@
             <th>Título</th>
             <th>Fecha Inicio</th>
             <th>fecha Fin</th>
-            <th>Monto</th>
+            <th>Estado</th>
             <th>Acciones</th>
         </tr>
         </thead>
@@ -18,10 +18,26 @@
                 <td>{{ r.titulo }}</td>
                 <td>{{ r.fechaInicio|date("d/m/Y") }}</td>
                 <td>{{ r.fechaFin|date("d/m/Y") }}</td>
-                <td>${{ r.monto }}</td>
-                <td>
-                    <a class="btn btn-primary" href="{{ path('detalleHosp', {'id':r.hospId}) }}" >Ver</a>
-                </td>
+                {%  if r.estado == 0 %}
+                    <td>
+                        Esperando Confirmación
+                    </td>
+                    <td></td>
+                {%elseif r.estado == 1 %}
+                    <td>
+                        Confirmada
+                    </td>
+                    <td>
+                        <a class="btn btn-primary verDetalles" data-path="{{ r.id }}" >Ver Datos</a>
+                    </td>
+                {% elseif r.estado == 2 %}
+                    <td>
+                        Rechazada
+                    </td>
+                    <td>
+                        <a class="btn btn-success calificar" data-path="{{ r.id }}" >Calificar</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

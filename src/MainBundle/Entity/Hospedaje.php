@@ -58,12 +58,6 @@ class Hospedaje
      */
     private $localidad;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="precio", type="integer")
-     */
-    private $precio;
 
     /**
      * @var string
@@ -245,29 +239,6 @@ class Hospedaje
         return $this->direccion;
     }
 
-    /**
-     * Set precio
-     *
-     * @param integer $precio
-     *
-     * @return Hospedaje
-     */
-    public function setPrecio($precio)
-    {
-        $this->precio = $precio;
-
-        return $this;
-    }
-
-    /**
-     * Get precio
-     *
-     * @return int
-     */
-    public function getPrecio()
-    {
-        return $this->precio;
-    }
 
     /**
      * Set capacidad

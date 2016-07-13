@@ -11,14 +11,15 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#home">Reservas sin Confirmar</a></li>
-                    <li><a data-toggle="tab" href="#menu1">Reservas Confirmadas</a></li>
+                <ul id="navRes" class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" data-path="1" id="misReservas" href="#">Mis reservas</a></li>
+                    <li><a data-toggle="tab" id="misReservasFin" data-path="2" href="#">Mis reservas finalizadas</a></li>
+                    <li><a data-toggle="tab" id="reservasParaConfirmar" data-path="3" href="#">Reservas de mis hospedajes</a></li>
                 </ul>
             </div>
         </div>
         <hr>
-        <div id="tablaMisPublicaciones">
+        <div id="tablaReservas">
             {% include 'MainBundle:Reservas:tablaHospedajes.html.twig' %}
         </div>
     </div>

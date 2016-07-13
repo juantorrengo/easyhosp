@@ -8,7 +8,6 @@
         <th>Tipo</th>
         <th>Localidad</th>
         <th>Dirección</th>
-        <th>Precio (por día)</th>
         <th>Capacidad</th>
         <th></th>
     </tr>
@@ -23,7 +22,6 @@
             <td>{{ hospedaje.tipoHosp }}</td>
             <td>{{ hospedaje.localidad }}</td>
             <td>{{ hospedaje.direccion }}</td>
-            <td>${{ hospedaje.precio }}</td>
             <td>{{ hospedaje.capacidad }} personas.</td>
             <td><a class="btn btn-primary verDetalle" data-path="{{ hospedaje.id }}" >Ver</a>
                 {% if app.session.get('id') != "" %}
