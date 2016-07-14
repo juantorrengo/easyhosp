@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block content %}
+    {% include 'MainBundle:Utils:alerts.html.twig' %}
+    <div class="main">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Mis Calificaciones
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <ul id="navCal" class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" data-path="1" id="califRecibidas" href="#">Recibidas como huesped</a></li>
+                    <li><a data-toggle="tab" data-path="2" id="califRecibidasHosp" href="#">De mis hospedajes</a></li>
+                    <li><a data-toggle="tab" id="califHechasHosp" data-path="3" href="#">Otorgadas a hospedajes</a></li>
+                    <li><a data-toggle="tab" id="califHechasHuespedes" data-path="4" href="#">Otorgadas a huespedes</a></li>
+                </ul>
+            </div>
+        </div>
+        <br>
+        <span>El puntaje tiene valores entre 1 y 5.</span>
+        <hr>
+        <div id="tablaCalificaciones">
+            {% include 'MainBundle:Calificaciones:tablaCalificacionesRecibidas.html.twig' %}
+        </div>
+    </div>
+    {% include 'MainBundle:Utils:modal.html.twig' %}
+{% endblock %}
+

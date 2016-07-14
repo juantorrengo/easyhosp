@@ -21,15 +21,20 @@ class SecurityController extends Controller
             $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository($this->repositorio)->findOneBy(array("email"=>$username, "password"=>$password));
             if($user){
-                $session = $request->getSession();
-                $session->set('id', $user->getId());
-                $session->set('pass', $user->getPassword());
-                $session->set('nombre', $user->getNombre());
-                $session->set('apellido', $user->getApellido());
-                $session->set('email', $user->getEmail());
-                $session->set('isPremium', $user->getIsPremium());
-                $session->set('isAdmin', $user->getIsAdmin());
-                return $this->redirect($this->generateUrl('home',  array('request' => $request, 'page'=>1)));
+                if($user->getBorrado()== 0){
+                    $session = $request->getSession();
+                    $session->set('id', $user->getId());
+                    $session->set('pass', $user->getPassword());
+                    $session->set('nombre', $user->getNombre());
+                    $session->set('apellido', $user->getApellido());
+                    $session->set('email', $user->getEmail());
+                    $session->set('isPremium', $user->getIsPremium());
+                    $session->set('isAdmin', $user->getIsAdmin());
+                    return $this->redirect($this->generateUrl('home'));
+                }else{
+                    $this->get('session')->getFlashBag()->add('error', 'El usuario está dado de baja en el sistema, comuniquese con un administrador.');
+                    return $this->render('MainBundle:Security:login.html.twig');
+                }
             }else{
                 $this->get('session')->getFlashBag()->add('error', 'Nombre de usuario o contraseña incorrectos');
                 return $this->render('MainBundle:Security:login.html.twig');
@@ -74,6 +79,8 @@ class SecurityController extends Controller
                 $usuario->setPreguntaSecreta($request->get('pregunta'));
                 $usuario->setRespuestaSeguridad($request->get('respuesta'));
                 $usuario->setIsAdmin(0);
+                $usuario->setBorrado(0);
+                $usuario->setFechaAlta(new \DateTime());
                 $usuario->setIsPremium(0);
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($usuario);
@@ -97,7 +104,7 @@ class SecurityController extends Controller
     public function logoutAction(Request $request) {
         $session = $request->getSession();
         $session->clear();
-        return $this->redirect($this->generateUrl('home', array('request'=>$request, 'page'=>1)));
+        return $this->redirect($this->generateUrl('home'));
     }
     /**
      * @Route("/indexAdmin", name="admin")

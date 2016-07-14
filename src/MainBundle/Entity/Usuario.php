@@ -116,6 +116,14 @@ class Usuario
     private $isAdmin;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="borrado", type="integer", length=1,  options={"default" = 0})
+     */
+    private $borrado;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="Hospedaje", mappedBy="usuario")
      */
     protected $hospedajes;
@@ -588,5 +596,21 @@ class Usuario
     public function setFechaAlta($fechaAlta)
     {
         $this->fechaAlta = $fechaAlta;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBorrado()
+    {
+        return $this->borrado;
+    }
+
+    /**
+     * @param mixed $borrado
+     */
+    public function setBorrado($borrado)
+    {
+        $this->borrado = $borrado;
     }
 }

@@ -21,12 +21,13 @@ class Calificacion
      */
     private $id;
 
+
     /**
      * @var int
      *
-     * @ORM\Column(name="puntuacion", type="integer")
+     * @ORM\Column(name="puntaje", type="integer")
      */
-    private $puntuacion;
+    private $puntaje;
 
     /**
      * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="calificaciones")
@@ -40,6 +41,13 @@ class Calificacion
      */
     protected $hospedaje;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="reserva", type="integer", length=1)
+     */
+    private $reserva;
+
 
     /**
      * Get id
@@ -49,30 +57,6 @@ class Calificacion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set puntuacion
-     *
-     * @param integer $puntuacion
-     *
-     * @return Calificacion
-     */
-    public function setPuntuacion($puntuacion)
-    {
-        $this->puntuacion = $puntuacion;
-
-        return $this;
-    }
-
-    /**
-     * Get puntuacion
-     *
-     * @return int
-     */
-    public function getPuntuacion()
-    {
-        return $this->puntuacion;
     }
 
     /**
@@ -121,5 +105,37 @@ class Calificacion
     public function getHospedaje()
     {
         return $this->hospedaje;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReserva()
+    {
+        return $this->reserva;
+    }
+
+    /**
+     * @param int $reserva
+     */
+    public function setReserva($reserva)
+    {
+        $this->reserva = $reserva;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPuntaje()
+    {
+        return $this->puntaje;
+    }
+
+    /**
+     * @param int $puntaje
+     */
+    public function setPuntaje($puntaje)
+    {
+        $this->puntaje = $puntaje;
     }
 }

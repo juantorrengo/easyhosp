@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Baja Usuario</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="form-horizontal" id="formBajaUsu" action="{{ path('confimarBaja') }}" method="POST">
+            <input type="hidden" name="userId" value="{{ u.id }}">
+        </form>
+    </div>
+    <div class="row" style="width: 90%; margin-left: 5px;">
+        <span>Desea dar de baja al usuario <strong>{{ u.email }}</strong>?</span>
+        <br>
+        <span>Una vez dado de baja el usuario no podrá utilizar nuevamente el sistema.</span>
+    </div>
+<div class="modal-footer">
+    <button id="aceptarBaja" class="btn btn-small btn-danger">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+        $('#aceptarBaja').on('click', function (event) {
+            event.preventDefault();
+            $('#formBajaUsu').submit();
+        });
+</script>

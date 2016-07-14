@@ -1,0 +1,25 @@
+<div class="table-responsive col-lg-12">
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr class="beGrey">
+            <th>Hospedaje</th>
+            <th>Puntaje Otorgado</th>
+            <th>Promedio dado a hospedajes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in calificaciones %}
+            <tr>
+                <td>{{ c.hosp }}</td>
+                <td>{{ c.puntaje }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ promedio }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

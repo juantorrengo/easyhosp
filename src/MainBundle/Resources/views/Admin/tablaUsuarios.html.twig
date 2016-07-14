@@ -1,0 +1,41 @@
+<div class="table-responsive col-lg-12">
+    <table class="table table-striped table-hover">
+
+        <thead>
+        <tr class="beGrey">
+            <th>Nombre</th>
+            <th>Fecha Alta</th>
+            <th>Premium</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for u in usuarios %}
+            <tr>
+                <td>{{ u.apellido }}, {{ u.nombre }}</td>
+                <td>{{ u.fechaAlta|date('d-m-Y') }}</td>
+                {% if u.isPremium == 1 %}
+                    <td>Si</td>
+                {% else %}
+                    <td>No</td>
+                {% endif %}
+                <td>{{ u.direccion }}</td>
+                <td>{{ u.telefono }}</td>
+                <td>{{ u.email }}</td>
+                {% if u.borrado ==  0  %}
+                    {% if u.isAdmin == 0 %}
+                        <td><a class="btn btn-danger bajaUsuario" data-path="{{ u.id }}">Dar de Baja</a></td>
+                    {% else %}
+                        <td>ADMIN</td>
+                    {% endif %}
+                {% else %}
+                    <td>DADO DE BAJA</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

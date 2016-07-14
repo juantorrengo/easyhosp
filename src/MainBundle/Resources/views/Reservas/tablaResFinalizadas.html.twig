@@ -22,14 +22,20 @@
                     <td>
                         Confirmada
                     </td>
+                    <td>
+                        <a class="btn btn-success calificar" data-path="{{ r.id }}" >Calificar</a>
+                    </td>
+                {% elseif r.estado == 0 %}
+                    <td>
+                        Finalizada, sin respuesta.
+                    </td>
+                    <td></td>
                 {% elseif r.estado == 2%}
                     <td>
                         Rechazada
                     </td>
+                    <td></td>
                 {% endif %}
-                    <td>
-                        <a class="btn btn-success calificar" data-path="{{ r.id }}" >Calificar</a>
-                    </td>
             </tr>
         {% endfor %}
         </tbody>

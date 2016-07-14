@@ -19,9 +19,15 @@
                 <td>{{ r.fechaInicio|date("d/m/Y") }}</td>
                 <td>{{ r.fechaFin|date("d/m/Y") }}</td>
                 {%  if r.estado == 0 %}
+                    {% if date() > date(r.fechaInicio) %}
+                    <td>
+                        Tiempo de respuesta caducado
+                    </td>
+                    {% else %}
                     <td>
                         Esperando Confirmación
                     </td>
+                    {% endif %}
                     <td></td>
                 {%elseif r.estado == 1 %}
                     <td>

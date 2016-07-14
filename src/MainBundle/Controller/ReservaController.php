@@ -4,12 +4,15 @@ namespace MainBundle\Controller;
 
 use Doctrine\ORM\ORMException;
 use MainBundle\Entity\Calificacion;
+use MainBundle\Entity\CalificacionHuesped;
 use MainBundle\Entity\Hospedaje;
 use MainBundle\Entity\Reserva;
 use MainBundle\Entity\Usuario;
+use MainBundle\MainBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -46,6 +49,7 @@ class ReservaController extends Controller
 
     /**
      * @Route("/msgConRes/{id}", name="msgConRes", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function msgConResAction(Request $request, $id)
     {
@@ -63,6 +67,7 @@ class ReservaController extends Controller
 
     /**
      * @Route("/msgRechRes/{id}", name="msgRechRes", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function msgRechResAction(Request $request, $id)
     {
@@ -80,13 +85,20 @@ class ReservaController extends Controller
 
     /**
      * @Route("/calificar/{id}", name="formCalificar", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function formCalificarAction(Request $request, $id)
     {
         try{
             $em = $this->getDoctrine()->getManager();
-            $datos = $em->getRepository('MainBundle:Reserva')->findDatosCalificarRes($id);
-            return $this->render('MainBundle:Reservas:formCalificar.html.twig', array('r'=>$datos));
+            $calificada = $em->getRepository('MainBundle:Calificacion')->findOneByReserva($id);
+            if($calificada){
+                $array = array('status'=> 400, 'msg'=>'El hospedaje ya fue calificado.');
+            }else{
+                $em = $this->getDoctrine()->getManager();
+                $datos = $em->getRepository('MainBundle:Reserva')->findDatosCalificarRes($id);
+                return $this->render('MainBundle:Reservas:formCalificar.html.twig', array('r'=>$datos));
+            }
         }catch (Exception $e){
             $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
         }
@@ -96,12 +108,64 @@ class ReservaController extends Controller
     }
 
     /**
+     * @Route("/calificarHuesp/{id}", name="formCalificarHuesp", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function formCalificarHuespAction(Request $request, $id)
+    {
+        try{
+            $em = $this->getDoctrine()->getManager();
+            $calificada = $em->getRepository('MainBundle:CalificacionHuesped')->findOneByReserva($id);
+            if($calificada){
+                $array = array('status'=> 400, 'msg'=>'El huesped ya fue calificado.');
+            }else{
+                $em = $this->getDoctrine()->getManager();
+                $datos = $em->getRepository('MainBundle:Reserva')->findDatosCalificarHuesp($id);
+                return $this->render('MainBundle:Reservas:formCalificarHuesp.html.twig', array('r'=>$datos));
+            }
+        }catch (ORMException $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        }
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
+     * @Route("/calificarHuesped", name="calificarHuesped")
+     */
+    public function calificarHuespedAction(Request $request)
+    {
+        try{
+            $resId = $request->get('resId');
+            $userId = $request->get('userId');
+            $huespId = $request->get('huespId');
+            $hospId = $request->get('hospId');
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository('MainBundle:Usuario')->findOneById($userId);
+            $calificacion = new CalificacionHuesped();
+            $calificacion->setReserva($resId);
+            $calificacion->setUsercalificado($huespId);
+            $calificacion->setUsercalificador($userId);
+            $calificacion->setPuntaje($request->get('puntaje'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($calificacion);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'La calificación fue realizada correctamente.');
+            return $this->redirect($this->generateUrl('misReservas'));
+        }catch (ORMException $e){
+            $this->get('session')->getFlashBag()->add('error', 'La calificación no se pudo realizar.');
+            return $this->redirect($this->generateUrl('misReservas'));
+        }
+    }
+
+    /**
      * @Route("/calificarReserva", name="calificarReserva")
      */
     public function calificarReservaAction(Request $request)
     {
         try{
-            $resId = $request->get('idRes');
+            $resId = $request->get('resId');
             $userId = $request->get('userId');
             $hospId = $request->get('hospId');
             $em = $this->getDoctrine()->getManager();
@@ -109,9 +173,10 @@ class ReservaController extends Controller
             $em = $this->getDoctrine()->getManager();
             $user = $em->getRepository('MainBundle:Usuario')->findOneById($userId);
             $calificacion = new Calificacion();
+            $calificacion->setReserva($resId);
             $calificacion->setHospedaje($hospedaje);
             $calificacion->setUsuario($user);
-            $calificacion->setPuntuacion($request->get('puntaje'));
+            $calificacion->setPuntaje($request->get('puntaje'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($calificacion);
             $em->flush();
@@ -168,6 +233,7 @@ class ReservaController extends Controller
 
     /**
      * @Route("/resSinConf", name="resSinConf", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function resSinConfAction(Request $request)
     {
@@ -186,6 +252,7 @@ class ReservaController extends Controller
 
     /**
      * @Route("/misReservasAjax", name="misReservasAjax", options={"expose"=true})
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function misReservasAjaxAction(Request $request)
     {

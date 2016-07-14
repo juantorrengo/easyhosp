@@ -533,20 +533,115 @@ tablaHospedajes.on('click', '.unmarkFav', function (e) {
     });
 });
 
+//USUARIOS
+
+var tablaUsuarios = $('#tablaUsuarios');
+
+$('.bajaUsuario').on('click', function (e) {
+    e.preventDefault();
+    tablaUsuarios.block(blockStyle);
+    $.ajax({
+        url:Routing.generate('msgBaja', {'id': $(this).attr('data-path')}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    });
+});
+
+function setAsActive(elem, div){
+    var prev = div.find('.active');
+    elem.parent().addClass('active');
+    prev.removeClass('active');
+}
+
+$('#califRecibidas').on('click', function (e) {
+    e.preventDefault();
+    tablaCalificaciones.block(blockStyle);
+    setAsActive($(this), $('#navCal'));
+    $.ajax({
+        url:Routing.generate('misCalificacionesAjax'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaCalificaciones.unblock();
+            }else{
+                tablaCalificaciones.html(data);
+                tablaCalificaciones.unblock();
+            }
+        }
+    });
+});
+
+$('#califRecibidasHosp').on('click', function (e) {
+    e.preventDefault();
+    tablaCalificaciones.block(blockStyle);
+    setAsActive($(this), $('#navCal'));
+    $.ajax({
+        url:Routing.generate('recibidasHospedajes'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaCalificaciones.unblock();
+            }else{
+                tablaCalificaciones.html(data);
+                tablaCalificaciones.unblock();
+            }
+        }
+    });
+});
+
+$('#califHechasHosp').on('click', function (e) {
+    e.preventDefault();
+    tablaCalificaciones.block(blockStyle);
+    setAsActive($(this), $('#navCal'));
+    $.ajax({
+        url:Routing.generate('dadasAHospedajes'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaCalificaciones.unblock();
+            }else{
+                tablaCalificaciones.html(data);
+                tablaCalificaciones.unblock();
+            }
+        }
+    });
+});
+
+$('#califHechasHuespedes').on('click', function (e) {
+    e.preventDefault();
+    tablaCalificaciones.block(blockStyle);
+    setAsActive($(this), $('#navCal'));
+    $.ajax({
+        url:Routing.generate('dadasAHuespedes'),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+                tablaCalificaciones.unblock();
+            }else{
+                tablaCalificaciones.html(data);
+                tablaCalificaciones.unblock();
+            }
+        }
+    });
+});
+
+
+
 //RESERVAS
 
 var tablaReservas = $('#tablaReservas');
 
-    function setAsActive(elem){
-        var prev = $('#navRes').find('.active');
-        elem.parent().addClass('active');
-        prev.removeClass('active');
-    }
 
 $('#reservasParaConfirmar').on('click', function (e) {
     e.preventDefault();
     tablaReservas.block(blockStyle);
-    setAsActive($(this));
+    setAsActive($(this), $('#navRes'));
     $.ajax({
         url:Routing.generate('resSinConf'),
         success: function (data) {
@@ -564,7 +659,7 @@ $('#reservasParaConfirmar').on('click', function (e) {
 $('#misReservasFin').on('click', function (e) {
     e.preventDefault();
     tablaReservas.block(blockStyle);
-    setAsActive($(this));
+    setAsActive($(this), $('#navRes'));
     $.ajax({
         url:Routing.generate('resFinalizadas'),
         success: function (data) {
@@ -582,7 +677,7 @@ $('#misReservasFin').on('click', function (e) {
 $('#misReservas').on('click', function (e) {
     e.preventDefault();
     tablaReservas.block(blockStyle);
-    setAsActive($(this));
+    setAsActive($(this), $('#navRes'));
     $.ajax({
         url:Routing.generate('misReservasAjax'),
         success: function (data) {
@@ -603,6 +698,22 @@ tablaReservas.on('click', '.calificar', function (e) {
     var id = $(this).attr('data-path');
     $.ajax({
         url: Routing.generate('formCalificar', {'id':id}),
+        success: function (data) {
+            if(data.status == 400){
+                alert(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    });
+});
+
+tablaReservas.on('click', '.calificarHuesp', function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-path');
+    $.ajax({
+        url: Routing.generate('formCalificarHuesp', {'id':id}),
         success: function (data) {
             if(data.status == 400){
                 alert(data.msg);

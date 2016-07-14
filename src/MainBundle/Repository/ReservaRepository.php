@@ -52,7 +52,7 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
                 h.id as hospId, h.borrado as borrado 
                 FROM MainBundle:Reserva r 
                 INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
-                WHERE (h.usuario = :userId AND r.fechaFin < CURRENT_DATE())';
+                WHERE (r.usuario = :userId AND r.fechaFin < CURRENT_DATE())';
         return $this->getEntityManager()
             ->createQuery($dql)
             ->setParameter(':userId', $userId)
@@ -61,7 +61,7 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
     
     public function findResSinConf($userId){
     $dql = 'SELECT r, r.id, r.fechaInicio, r.fechaFin, IDENTITY (r.hospedaje),r.estado , h.titulo as titulo, 
-                h.id as hospId, h.borrado as borrado 
+                h.id as hospId, h.borrado as borrado
                 FROM MainBundle:Reserva r 
                 INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
                 WHERE (h.usuario = :userId)';
@@ -76,6 +76,19 @@ class ReservaRepository extends \Doctrine\ORM\EntityRepository
                 h.id as hospId
                 FROM MainBundle:Reserva r 
                 INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                WHERE (r.id = :resId)';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':resId', $resId)
+            ->getOneOrNullResult();
+    }
+
+    public function findDatosCalificarHuesp($resId){
+        $dql = 'SELECT r, r.id, IDENTITY (r.hospedaje), h.titulo as titulo, 
+                h.id as hospId, IDENTITY (r.usuario), u.id as userId, u.nombre as nombre, u.apellido as apellido
+                FROM MainBundle:Reserva r 
+                INNER JOIN MainBundle:Hospedaje h WITH r.hospedaje = h.id
+                INNER JOIN MainBundle:Usuario u WITH r.usuario = u.id
                 WHERE (r.id = :resId)';
         return $this->getEntityManager()
             ->createQuery($dql)

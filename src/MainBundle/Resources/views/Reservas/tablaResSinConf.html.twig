@@ -30,18 +30,16 @@
                     <td>
                         Confirmada
                     </td>
-                    {% if date(r.fechaFin) < date() %}
+                    {% if date() > date(r.fechaFin) %}
                         <td>
-                            <a class="btn btn-success calificar" data-path="{{ r.id }}" >Calificar Huesped</a>
+                            <a class="btn btn-success calificarHuesp" data-path="{{ r.id }}" >Calificar Huesped</a>
                         </td>
                     {% endif %}
                 {% elseif r.estado == 2 %}
                     <td>
                         Rechazada
                     </td>
-                    <td>
-                        <a class="btn btn-success calificar" data-path="{{ r.id }}" >Calificar Huesped</a>
-                    </td>
+                    <td><td>
                 {% endif %}
             </tr>
         {% endfor %}

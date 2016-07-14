@@ -10,7 +10,6 @@
         <th>Tipo</th>
         <th>Localidad</th>
         <th>Dirección</th>
-        <th>Precio (por día)</th>
         <th>Capacidad</th>
         <th></th>
     </tr>
@@ -23,7 +22,6 @@
             <td>{{ hospedaje.tipoHosp }}</td>
             <td>{{ hospedaje.localidad }}</td>
             <td>{{ hospedaje.direccion }}</td>
-            <td>${{ hospedaje.precio }}</td>
             <td>{{ hospedaje.capacidad }} personas.</td>
             <td><a class="btn btn-primary verDetalle" href="#" data-path="{{ hospedaje.id }}">Ver</a>
             <i class="fa fa-star fa-lg unmarkFav" data-ref="{{ hospedaje.id }}" title="Favorito" aria-hidden="true"></i>
