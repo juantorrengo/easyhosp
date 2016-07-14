@@ -553,11 +553,7 @@ $('.bajaUsuario').on('click', function (e) {
     });
 });
 
-function setAsActive(elem, div){
-    var prev = div.find('.active');
-    elem.parent().addClass('active');
-    prev.removeClass('active');
-}
+var tablaCalificaciones = $('#tablaCalificaciones');
 
 $('#califRecibidas').on('click', function (e) {
     e.preventDefault();
@@ -792,4 +788,10 @@ function fullDisabled(elem){
 
 function fullEnabled(elem){
     elem.prop('disabled', false);
+}
+
+function setAsActive(elem, div){
+    var prev = div.find('.active');
+    elem.parent().addClass('active');
+    prev.removeClass('active');
 }

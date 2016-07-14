@@ -140,13 +140,12 @@ class ReservaController extends Controller
             $resId = $request->get('resId');
             $userId = $request->get('userId');
             $huespId = $request->get('huespId');
-            $hospId = $request->get('hospId');
             $em = $this->getDoctrine()->getManager();
-            $user = $em->getRepository('MainBundle:Usuario')->findOneById($userId);
             $calificacion = new CalificacionHuesped();
             $calificacion->setReserva($resId);
             $calificacion->setUsercalificado($huespId);
             $calificacion->setUsercalificador($userId);
+            $calificacion->setComentario($request->get('comentario'));
             $calificacion->setPuntaje($request->get('puntaje'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($calificacion);
@@ -176,6 +175,7 @@ class ReservaController extends Controller
             $calificacion->setReserva($resId);
             $calificacion->setHospedaje($hospedaje);
             $calificacion->setUsuario($user);
+            $calificacion->setComentario($request->get('comentario'));
             $calificacion->setPuntaje($request->get('puntaje'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($calificacion);

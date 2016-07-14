@@ -48,6 +48,13 @@ class Calificacion
      */
     private $reserva;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comentario", type="string", length=255, nullable=true)
+     */
+    private $comentario;
+
 
     /**
      * Get id
@@ -137,5 +144,21 @@ class Calificacion
     public function setPuntaje($puntaje)
     {
         $this->puntaje = $puntaje;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param string $comentario
+     */
+    public function setComentario($comentario)
+    {
+        $this->comentario = $comentario;
     }
 }
