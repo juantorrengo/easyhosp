@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Confirmar Hospedaje</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="form-horizontal" id="formConfRes" action="{{ path('confirmarReserva') }}" method="POST">
+            <input type="hidden" name="idRes" value="{{ r.id }}">
+        </form>
+    </div>
+    <div class="row" style="width: 90%; margin-left: 5px;">
+        <span>Desea confirmar la Reserva del Hospedaje <strong>{{ r.titulo }}</strong>?</span>
+        <br>
+        <span>Una vez confirmada la reserva se le enviarán los datos de contacto al usuario solicitante para
+        ponerte en contacto con usted.</span>
+    </div>
+    <div class="row">
+        <dl class="col-lg-6">
+            <h4>Datos del Huesped</h4>
+            <dt>Nombre y Apellido</dt>
+            <dd>{{ r.apellido}}, {{ r.nombre }}</dd>
+            <dt>Teléfono</dt>
+            <dd>{{ r.telefono }}</dd>
+            <dt>E-mail</dt>
+            <dd>{{ r.email }}</dd>
+        </dl>
+        <dl class="col-lg-6">
+            <h4>Datos de la reserva</h4>
+            <dt>Fechas solicitadas</dt>
+            <dd>{{ r.fechaInicio|date("d/m/Y")}} hasta {{ r.fechaFin|date("d/m/Y") }}</dd>
+        </dl>
+    </div>
+<div class="modal-footer">
+    <button id="confirmarReserva" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+        $('#confirmarReserva').on('click', function (event) {
+            event.preventDefault();
+            $('#formConfRes').submit();
+        });
+</script>

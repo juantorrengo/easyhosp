@@ -1,0 +1,89 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">{{ r.titulo }}</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <dl class="col-lg-6">
+            <dt>Descripción</dt>
+            <dd>{{ r.descripcion}}</dd>
+            <dt>Tipo</dt>
+            <dd>{{ hospedaje.tipoHosp}}</dd>
+            <dt>Localidad</dt>
+            <dd>{{ hospedaje.localidad}}</dd>
+            <dt>Dirección</dt>
+            <dd>{{ hospedaje.direccion}}</dd>
+            <dt>Capacidad</dt>
+            <dd>{{ hospedaje.capacidad}} personas.</dd>
+        </dl>
+        <dl class="col-lg-6">
+            <dt>Fechas buscadas</dt>
+            <dd>{{ desde|date("d/m/Y") }} hasta {{ hasta|date("d/m/Y") }}</dd>
+            {% if app.session.get('id') != "" %}
+                <form action="{{ path('reservarHosp') }}" method="POST" name="formReservar">
+                    <input type="hidden" name="fechaDesde" value="{{ desde }}">
+                    <input type="hidden" name="fechaHasta" value="{{ hasta }}">
+                    <input type="hidden" name="hospID" value="{{ hospedaje.id }}">
+                    <input type="hidden" name="user" value="{{ app.session.get('id') }}">
+                    <span class="oblique">Al aceptar deberá esperar la confirmación del dueño. Una vez confirmada la reserva,
+                    obtendrá los datos para ponerse en contacto.</span>
+                    <br>
+                    <button type="submit" class="btn btn-success small">Reservar</button>
+                </form>
+            {% endif %}
+        </dl>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h3>Galería</h3>
+            </div>
+            <div id="container">
+                <img id="img" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="japon" />
+                <img class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="nuevayork" />
+                <img class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="patagonia" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h3>Preguntas</h3>
+            </div>
+            {% for consulta in consultas %}
+                <dd><b>Pregunta:</b> {{ consulta.pregunta }} </dd>
+                {% if consulta.respuesta != "" %}
+                    <dd><b>Respuesta:</b> {{ consulta.respuesta }} </dd>
+                {% elseif app.session.get('nombre') == hospedaje.userNom %}
+                    <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
+                        <textarea name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
+                        <input type="hidden" name="id" value="{{ hospedaje.id }}">
+                        <label>Pregunta</label><input type="hidden" name="idConsulta" value="{{ consulta.id }}">
+                        <button class="btn btn-small btn-primary" id="responderConsulta" type="submit"> Enviar</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+            {% if app.session.get('id') != "" %}
+                <form id="form-signin" action="{{ path('checkConsult') }}" method="POST" class="form-signin">
+                    <textarea  name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
+                    <input type="hidden" name="id" value="{{ hospedaje.id }}">
+                    <button id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
+                        Enviar</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="aceptarNewHosp" class="btn btn-small btn-primary">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>

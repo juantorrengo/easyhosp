@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="blue bigger">Calificar Hospedaje {{ r.titulo }}</h4>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <form class="form-horizontal" id="formCalificar" action="{{ path('calificarReserva') }}" method="POST">
+            <input type="hidden" name="resId" value="{{ r.id }}">
+            <input type="hidden" name="userId" value="{{ app.session.get('id') }}">
+            <input type="hidden" name="hospId" value="{{ r.hospId }}">
+            <div class="form group col-lg-6" style="margin-bottom: 20px;">
+                <label>Calificar Huesped</label>
+                <select class="form-control" name="puntaje">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="calificarReserva" class="btn btn-small btn-success">
+        <i class="icon-ok"></i>
+        Aceptar
+    </button>
+    <button class="btn btn-small" data-dismiss="modal">
+        <i class="icon-remove"></i>
+        Cancelar
+    </button>
+</div>
+<script type="text/javascript">
+        $('#calificarReserva').on('click', function (event) {
+            event.preventDefault();
+            $('#formCalificar').submit();
+        });
+</script>
