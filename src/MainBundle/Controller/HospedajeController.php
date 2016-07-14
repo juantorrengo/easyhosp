@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class HospedajeController extends Controller
 {
@@ -81,7 +82,26 @@ class HospedajeController extends Controller
             $hospedaje->setBorrado(0);
             $hospedaje->setUsuario($usuario);
             $hospedaje->setTipohospedaje($tipo);
-            $hospedaje->setImagen1($this->upload2Action($request));
+            $image = $request->files->get('img1');
+            if ($image != ""){
+                $hospedaje->setImagen1($this->upload3Action($image));
+            }
+            $image = $request->files->get('img2');
+            if ($image != ""){
+                $hospedaje->setImagen2($this->upload3Action($image));
+            }
+            $image = $request->files->get('img3');
+            if ($image != ""){
+                $hospedaje->setImagen3($this->upload3Action($image));
+            }
+            $image = $request->files->get('img4');
+            if ($image != ""){
+                $hospedaje->setImagen4($this->upload3Action($image));
+            }
+            $image = $request->files->get('img5');
+            if ($image != ""){
+                $hospedaje->setImagen5($this->upload3Action($image));
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($hospedaje);
             $em->flush();
@@ -358,42 +378,67 @@ class HospedajeController extends Controller
      */
     public function hospedajeEditAction($id)
     {
-        try {
+        try{
             $em = $this->getDoctrine()->getManager();
             $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
-
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
-            if (!$hospedaje) {
-                $array = array('status' => 400, 'msg' => 'Hospedaje no encontrado');
-            } else {
-                return $this->render('MainBundle:Hospedaje:formEdit.html.twig', array('hospedaje' => $hospedaje, 'tipos' => $tipos));
+            if(!$hospedaje){
+                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
+            }else{
+                return $this->render('MainBundle:Hospedaje:formEdit.html.twig', array('hospedaje'=>$hospedaje, 'tipos'=>$tipos));
             }
-        } catch (Exception $e) {
-            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
+        }catch (Exception $e){
+            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-
     /**
      * @Route("/hospEditSave", name="hospEditSave")
      */
     public function hospEditSaveAction(Request $request)
     {
-        try {
+        try{
             $em = $this->getDoctrine()->getManager();
-            $tipo = $em->getRepository($this->repositorio)->findOneById($request->get('idTipo'));
-            $tipo->setNombre($request->get('nombre'));
+            $tipo = $em->getRepository('MainBundle:TipoHospedaje')->find($request->get('tipoHospedaje'));
             $em = $this->getDoctrine()->getManager();
-            $em->persist($tipo);
+            $hospedaje = $em->getRepository($this->repositorio)->findOneById($request->get('idHospedaje'));
+            $hospedaje->setTitulo($request->get('titulo'));
+            $hospedaje->setDescripcion($request->get('descripcion'));
+            $hospedaje->setDireccion($request->get('direccion'));
+            $hospedaje->setLocalidad($request->get('localidad'));
+            $hospedaje->setCapacidad($request->get('capacidad'));
+            $hospedaje->setTipohospedaje($tipo);
+            $image = $request->files->get('img1');
+            if ($image != ""){
+                $hospedaje->setImagen1($this->upload3Action($image));
+            }
+            $image = $request->files->get('img2');
+            if ($image != ""){
+                $hospedaje->setImagen2($this->upload3Action($image));
+            }
+            $image = $request->files->get('img3');
+            if ($image != ""){
+                $hospedaje->setImagen3($this->upload3Action($image));
+            }
+            $image = $request->files->get('img4');
+            if ($image != ""){
+                $hospedaje->setImagen4($this->upload3Action($image));
+            }
+            $image = $request->files->get('img5');
+            if ($image != ""){
+                $hospedaje->setImagen5($this->upload3Action($image));
+            }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($hospedaje);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje ' . $tipo->getNombre() . ' fue editado correctamente.');
-            return $this->redirect($this->generateUrl('tipoHosp'));
-        } catch (Exception $e) {
-            $this->get('session')->getFlashBag()->add('error', 'Error al edtar tipo de hospedaje, intente nuevamente.');
-            return $this->redirect($this->generateUrl('tipoHosp'));
+            $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedaje->getTitulo().' fue editado correctamente.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
+        }catch (Exception $e){
+            $this->get('session')->getFlashBag()->add('error', 'Error al edtar hospedaje, intente nuevamente.');
+            return $this->redirect($this->generateUrl('misHospedajes'));
         }
     }
 
@@ -497,7 +542,34 @@ class HospedajeController extends Controller
      */
     public function upload2Action(Request $request)
     {
-        $image = $request->files->get('img');
+        $image = $request->files->get('img1');
+        $uploadedURL='';
+        if (($image instanceof UploadedFile) && ($image->getError() == '0')) {
+            if (($image->getSize() < 2000000000)) {
+                $originalName = $image->getClientOriginalName();
+                $name_array = explode('.', $originalName);
+                $file_type = $name_array[sizeof($name_array) - 1];
+                $valid_filetypes = array('jpg', 'jpeg', 'bmp', 'png');
+                if (in_array(strtolower($file_type), $valid_filetypes)) {
+                    //Start Uploading File
+
+                    $document = new Document();
+                    $document->setFile($image);
+                    $document->setSubDirectory('uploads');
+                    $document->processFile();
+                    $uploadedURL=$uploadedURL = $document->getUploadDirectory() . DIRECTORY_SEPARATOR . $document->getSubDirectory() . DIRECTORY_SEPARATOR . $image->getBasename();
+                }
+            }
+        }
+        return $uploadedURL;
+
+    }
+
+    /**
+     * @Route("/upload3", name="upload3")
+     */
+    public function upload3Action($image)
+    {
         $uploadedURL='';
         if (($image instanceof UploadedFile) && ($image->getError() == '0')) {
             if (($image->getSize() < 2000000000)) {

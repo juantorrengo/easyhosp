@@ -3,7 +3,7 @@
     <h4 class="blue bigger">Editar Hospedaje</h4>
 </div>
 <div class="modal-body">
-    <form class="form-horizontal" id="formEditHosp" action="{{ path('hospEditSave') }}" method="POST">
+    <form class="form-horizontal" enctype="multipart/form-data" id="formEditHosp" action="{{ path('hospEditSave') }}" method="POST">
         <input type="hidden" name="idHospedaje" value="{{ hospedaje.id }}">
 
         <div class="form-group row">
@@ -23,7 +23,7 @@
         <div class="form-group row">
             <label for="inputTipohospedaje" class="col-sm-3 form-control-label">Tipo hospedaje*</label>
             <div class="col-sm-7">
-                <select class="form-control" name="tipohospedaje">
+                <select class="form-control" name="tipoHospedaje" id="tipoHospedaje">
                     {% for tipo in tipos %}
                         <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
                     {% endfor %}
@@ -52,15 +52,42 @@
                 <input type="number" class="form-control" name="capacidad" id="capacidad"  value="{{ hospedaje.capacidad }}" />
             </div>
         </div>
+        <div class="row">
+            <label for="inputImagenes" class="col-sm-3 form-control-label">Imágenes actuales</label>
+            <div class="col-lg-7">
+                <div id="container">
+                    {% if hospedaje.imagen1 %}
+                        <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen1)}}">
+                    {% endif %}
 
+                    {% if hospedaje.imagen2 %}
+                        <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen2)}}">
+                    {% endif %}
+
+                    {% if hospedaje.imagen3 %}
+                        <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen3)}}">
+                    {% endif %}
+
+                    {% if hospedaje.imagen4 %}
+                        <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen4)}}">
+                    {% endif %}
+
+                    {% if hospedaje.imagen5 %}
+                        <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen5)}}">
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        </br>
         <div class="form-group row">
             <label for="inputImagenes" class="col-sm-3 form-control-label">Imágenes*</label>
             <div class="col-sm-7">
-                <input type="file" id="file1" class="form-control" name="file1" value="{{ hospedaje.imagen1 }}" />
-                <input type="file" class="form-control" name="file2"/>
-                <input type="file" class="form-control" name="file3" />
-                <input type="file" class="form-control" name="file4" />
-                <input type="file" class="form-control" name="file5" />
+                <input type="file" id="file1" class="form-control" name="img1" />
+                <input type="file" id="file1" class="form-control" name="img2" />
+                <input type="file" id="file1" class="form-control" name="img3" />
+                <input type="file" id="file1" class="form-control" name="img4" />
+                <input type="file" id="file1" class="form-control" name="img5" />
             </div>
         </div>
 
@@ -77,6 +104,3 @@
 
     </form>
 </div>
-
-
-

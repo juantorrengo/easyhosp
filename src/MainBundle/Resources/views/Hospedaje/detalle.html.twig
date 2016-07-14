@@ -1,8 +1,13 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h4 class="blue bigger">{{ hospedaje.titulo }}</h4>
+<div id="previa">
+    <div>
+        <img src="" width="400"	height="700" id="imgFull">
+    </div>
 </div>
 <div class="modal-body">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="blue bigger">{{ hospedaje.titulo }}</h4>
+    </div>
     <div class="row">
         <dl class="col-lg-6">
             <h4>Datos</h4>
@@ -48,19 +53,27 @@
                 <h3>Galería</h3>
             </div>
 
-            <div id="previa">
-                <div>
-                    <img src="" width="400"	height="700" id="imgFull">
-                </div>
-            </div>
-
             <div id="container">
                 {% if hospedaje.imagen1 %}
                     <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen1)}}">
                 {% endif %}
-                <img id="img" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="japon" />
-                <img class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="nuevayork" />
-                <img class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="patagonia" />
+
+                {% if hospedaje.imagen2 %}
+                    <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen2)}}">
+                {% endif %}
+
+                {% if hospedaje.imagen3 %}
+                    <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen3)}}">
+                {% endif %}
+
+                {% if hospedaje.imagen4 %}
+                    <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen4)}}">
+                {% endif %}
+
+                {% if hospedaje.imagen5 %}
+                    <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen5)}}">
+                {% endif %}
+
             </div>
         </div>
     </div>
@@ -94,17 +107,19 @@
         </div>
 
     </div>
+
+    <div class="modal-footer">
+        <button id="aceptarNewHosp" class="btn btn-small btn-primary">
+            <i class="icon-ok"></i>
+            Aceptar
+        </button>
+        <button class="btn btn-small" data-dismiss="modal">
+            <i class="icon-remove"></i>
+            Cancelar
+        </button>
+    </div>
 </div>
-<div class="modal-footer">
-    <button id="aceptarNewHosp" class="btn btn-small btn-primary">
-        <i class="icon-ok"></i>
-        Aceptar
-    </button>
-    <button class="btn btn-small" data-dismiss="modal">
-        <i class="icon-remove"></i>
-        Cancelar
-    </button>
-</div>
+
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -119,6 +134,7 @@
             $("#respuesta").attr('style', 'display:none;');
             $("#responderConsulta").attr('style', 'display:none;');
             $("#aceptarConsulta").attr('style', 'display:none;');
+            $(".modal-body").attr('style', 'display:none;');
 
         }
         function cerrarFull(){
@@ -128,6 +144,7 @@
                 $("#respuesta").attr('style', '');
                 $("#responderConsulta").attr('style', '');
                 $("#aceptarConsulta").attr('style', '');
+                $(".modal-body").attr('style', '');
             });﻿
         }
 
