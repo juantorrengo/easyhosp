@@ -4,6 +4,7 @@
         <tr class="beGrey">
             <th>Hospedaje</th>
             <th>Puntaje Otorgado</th>
+            <th>Comentario</th>
             <th>Promedio dado a hospedajes</th>
         </tr>
         </thead>
@@ -12,10 +13,12 @@
             <tr>
                 <td>{{ c.hosp }}</td>
                 <td>{{ c.puntaje }}</td>
+                <td>{{ c.comentario }}</td>
                 <td></td>
             </tr>
         {% endfor %}
             <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td>{{ promedio }}</td>

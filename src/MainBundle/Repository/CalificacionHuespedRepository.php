@@ -11,7 +11,7 @@ namespace MainBundle\Repository;
 class CalificacionHuespedRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findRecibidasAsGuest($userId){
-        $dql='SELECT c, c.puntaje, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
+        $dql='SELECT c, c.puntaje, c.comentario, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
               FROM MainBundle:CalificacionHuesped c
               INNER JOIN MainBundle:Usuario u WITH u.id = c.usercalificador
               INNER JOIN MainBundle:Hospedaje h WITH h.usuario = c.usercalificador
@@ -23,7 +23,7 @@ class CalificacionHuespedRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findRecibidasAsOwner($userId){
-        $dql='SELECT c, c.puntaje, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
+        $dql='SELECT c, c.puntaje, c.comentario, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
               FROM MainBundle:Calificacion c
               INNER JOIN MainBundle:Usuario u WITH u.id = c.usuario
               INNER JOIN MainBundle:Hospedaje h WITH h.id = c.hospedaje
@@ -35,7 +35,7 @@ class CalificacionHuespedRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findOtorgadasToGuest($userId){
-        $dql='SELECT c, c.puntaje, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
+        $dql='SELECT c, c.puntaje, c.comentario, u.nombre as nombre, u.apellido as apellido, h.titulo as hosp
               FROM MainBundle:CalificacionHuesped c
               INNER JOIN MainBundle:Usuario u WITH u.id = c.usercalificado
               INNER JOIN MainBundle:Hospedaje h WITH h.usuario = c.usercalificado
@@ -47,7 +47,7 @@ class CalificacionHuespedRepository extends \Doctrine\ORM\EntityRepository
     }
 
     public function findOtorgadasToHosp($userId){
-        $dql='SELECT c, c.puntaje, h.titulo as hosp
+        $dql='SELECT c, c.puntaje, c.comentario, h.titulo as hosp
               FROM MainBundle:CalificacionHuesped c
               INNER JOIN MainBundle:Hospedaje h WITH h.usuario = c.usercalificador
               WHERE c.usercalificador = :userId';

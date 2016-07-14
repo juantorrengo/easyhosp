@@ -51,6 +51,13 @@ class CalificacionHuesped
      */
     private $reserva;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comentario", type="string", length=255, nullable=true)
+     */
+    private $comentario;
+
 
     /**
      * Get id
@@ -132,6 +139,22 @@ class CalificacionHuesped
     public function setReserva($reserva)
     {
         $this->reserva = $reserva;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * @param string $comentario
+     */
+    public function setComentario($comentario)
+    {
+        $this->comentario = $comentario;
     }
 }
 

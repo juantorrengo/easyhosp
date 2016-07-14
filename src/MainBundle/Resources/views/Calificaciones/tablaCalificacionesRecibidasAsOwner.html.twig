@@ -6,6 +6,7 @@
             <th>Hospedaje</th>
             <th>Huesped</th>
             <th>Puntaje recibido como dueño</th>
+            <th>Comentario</th>
             <th>Promedio recibido</th>
         </tr>
         </thead>
@@ -15,10 +16,12 @@
                 <td>{{ c.hosp }}</td>
                 <td>{{ c.apellido }}, {{ c.nombre }}</td>
                 <td>{{ c.puntaje }}</td>
+                <td>{{ c.comentario }}</td>
                 <td></td>
             </tr>
         {% endfor %}
             <tr>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

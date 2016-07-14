@@ -12,16 +12,17 @@
             <div class="form group col-lg-9" style="margin-bottom: 20px;">
                 <h5>Huesped: {{ r.apellido }}, {{ r.nombre }}. Hospedaje: {{ r.titulo }}</h5>
                 <br>
-                <label>Calificar Huesped</label>
-                <select class="form-control" name="puntaje">
+                <label class="col-sm-6 form-control-label">Calificar Huesped</label>
+                <select style="margin-left: 14px; width: 90%;" class="form-control" name="puntaje">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
+                <label class="col-sm-6 form-control-label">Comentario (opcional)</label>
+                <textarea name="comentario" class="form-control col-sm-6" style="margin-left: 14px; width: 90%;"  cols="30" rows="5"></textarea>
             </div>
-
         </form>
     </div>
 </div>

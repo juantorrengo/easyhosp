@@ -4,21 +4,20 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <form class="form-horizontal" id="formCalificar" action="{{ path('calificarReserva') }}" method="POST">
+        <form class="form-group" id="formCalificar" action="{{ path('calificarReserva') }}" method="POST">
             <input type="hidden" name="resId" value="{{ r.id }}">
             <input type="hidden" name="userId" value="{{ app.session.get('id') }}">
             <input type="hidden" name="hospId" value="{{ r.hospId }}">
-            <div class="form group col-lg-6" style="margin-bottom: 20px;">
-                <label>Calificar Hospedaje</label>
-                <select class="form-control" name="puntaje">
+                <label class="col-sm-6 form-control-label">Calificar Hospedaje</label>
+                <select style="margin-left: 14px; width: 90%;" class="form-control" name="puntaje">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
                     <option value="5">5</option>
                 </select>
-            </div>
-
+                <label class="col-sm-6 form-control-label">Comentario (opcional)</label>
+                <textarea name="comentario" class="form-control col-sm-6" style="margin-left: 14px; width: 90%;"  cols="30" rows="5"></textarea>
         </form>
     </div>
 </div>
