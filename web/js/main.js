@@ -852,4 +852,6 @@ function setAsActive(elem, div){
     var prev = div.find('.active');
     elem.parent().addClass('active');
     prev.removeClass('active');
+
+
 }
