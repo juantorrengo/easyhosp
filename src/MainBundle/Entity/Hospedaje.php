@@ -58,31 +58,6 @@ class Hospedaje
      */
     private $localidad;
 
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="reservadas", type="string", length=255)
-     */
-    private $reservadas;
-
-    /**
-     * @return mixed
-     */
-    public function getReservadas()
-    {
-        return $this->reservadas;
-    }
-
-    /**
-     * @param mixed $reservadas
-     */
-    public function setReservadas($reservadas)
-    {
-        $this->reservadas = $reservadas;
-    }
-
-
     /**
      * @ORM\Column(type="string", name="imagen1", length=255, nullable=true)
      */
