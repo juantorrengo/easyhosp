@@ -3,7 +3,7 @@
 <table class="table table-hover table-bordered">
     <thead>
     <tr class="beGrey">
-        <th></th>
+        <th>Imagen</th>
         <th>Título</th>
         <th>Tipo</th>
         <th>Localidad</th>
@@ -16,8 +16,12 @@
     {% for hospedaje in hospedajes %}
         {% if hospedaje.borrado == 0 %}
         <tr>
+            <td><img style=" width: 110px; height: 80px;" id="img" class="img-rounded" src="{{ asset('images/default.png') }}" alt="default" /></td>
+            {#
+                SI ES PREMIUM HAY QUE MOSTRAR ESTA IMAGEN Y NO LA DE ARRIBA
 
-            <td></td>
+                <td><img style=" width: 110px; height: 80px;" id="img" class="img-rounded" {% if hospedaje.imagen1 %} src="{{ hospedaje.imagen1 }}"  {% endif %}alt="premium" /></td>
+            #}
             <td>{{ hospedaje.titulo }}</td>
             <td>{{ hospedaje.tipoHosp }}</td>
             <td>{{ hospedaje.localidad }}</td>

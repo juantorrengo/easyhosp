@@ -47,7 +47,17 @@
             <div class="page-header">
                 <h3>Galería</h3>
             </div>
+
+            <div id="previa">
+                <div>
+                    <img src="" width="400"	height="700" id="imgFull">
+                </div>
+            </div>
+
             <div id="container">
+                {% if hospedaje.imagen1 %}
+                    <img id="img" class="img-rounded" src="{{asset(hospedaje.imagen1)}}">
+                {% endif %}
                 <img id="img" class="img-rounded" src="{{ asset('images/japon.jpg') }}" alt="japon" />
                 <img class="img-rounded" src="{{ asset('images/nuevayork.jpg') }}" alt="nuevayork" />
                 <img class="img-rounded" src="{{ asset('images/patagonia.jpg') }}" alt="patagonia" />
@@ -57,27 +67,27 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="page-header">
+            <div class="">
                 <h3>Preguntas</h3>
             </div>
             {% for consulta in consultas %}
                 <dd><b>Pregunta:</b> {{ consulta.pregunta }} </dd>
                 {% if consulta.respuesta != "" %}
-                    <dd><b>Respuesta:</b> {{ consulta.respuesta }} </dd>
+                    <dd><b>Respuesta:</b> {{ consulta.respuesta }} </dd> </br>
                 {% elseif app.session.get('nombre') == hospedaje.userNom %}
                     <form id="form-signin" action="{{ path('responderConsulta') }}" method="POST" class="form-signin">
-                        <textarea name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
+                        <textarea style="" name="respuesta" id="respuesta" class="form-control" rows="1" placeholder="Escribe tu respuesta" required autofocus></textarea>
                         <input type="hidden" name="id" value="{{ hospedaje.id }}">
-                        <label>Pregunta</label><input type="hidden" name="idConsulta" value="{{ consulta.id }}">
-                        <button class="btn btn-small btn-primary" id="responderConsulta" type="submit"> Enviar</button>
+                        <input type="hidden" name="idConsulta" value="{{ consulta.id }}">
+                        <button style="" class="btn btn-small btn-primary" id="responderConsulta" type="submit"> Enviar</button>
                     </form>
                 {% endif %}
             {% endfor %}
             {% if app.session.get('id') != "" %}
                 <form id="form-signin" action="{{ path('checkConsult') }}" method="POST" class="form-signin">
-                    <textarea  name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
+                    <textarea style="" name="consulta" id="consulta" class="form-control" rows="2" placeholder="Escribe tu pregunta" required autofocus></textarea></br>
                     <input type="hidden" name="id" value="{{ hospedaje.id }}">
-                    <button id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
+                    <button style="" id="aceptarConsulta" class="btn btn-lg btn-primary btn-block" type="submit">
                         Enviar</button>
                 </form>
             {% endif %}
@@ -95,3 +105,31 @@
         Cancelar
     </button>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#container img").on("click", abrirFull);
+        $("#previa").on("click", cerrarFull);
+
+        function abrirFull() {
+            var direccion = $(this).attr('src');
+            $("#imgFull").attr('src', direccion);
+            $("#previa").fadeIn();
+            $("#consulta").attr('style', 'display:none;');
+            $("#respuesta").attr('style', 'display:none;');
+            $("#responderConsulta").attr('style', 'display:none;');
+            $("#aceptarConsulta").attr('style', 'display:none;');
+
+        }
+        function cerrarFull(){
+            $("#previa").on('click',function(){
+                $(this).fadeOut();
+                $("#consulta").attr('style', '');
+                $("#respuesta").attr('style', '');
+                $("#responderConsulta").attr('style', '');
+                $("#aceptarConsulta").attr('style', '');
+            });﻿
+        }
+
+    });
+</script>

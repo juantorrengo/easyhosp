@@ -5,6 +5,8 @@ namespace MainBundle\Controller;
 use Doctrine\ORM\ORMException;
 use MainBundle\Entity\Favorito;
 use MainBundle\Entity\Hospedaje;
+use MainBundle\Entity\Document;
+use MainBundle\Entity\UploadFileMover;
 use MainBundle\Entity\Consulta;
 use MainBundle\Entity\TipoHospedaje;
 //use MainBundle\Form\HospType;
@@ -17,27 +19,30 @@ class HospedajeController extends Controller
 {
     private $repositorio = 'MainBundle:Hospedaje';
 
-    private function checkSession(Request $request){
+    private function checkSession(Request $request)
+    {
         $session = $request->getSession();
-        if($session->has("id")){
+        if ($session->has("id")) {
             $condicion = true;
-        }else{
+        } else {
             $condicion = false;
         }
         return $condicion;
     }
 
+
     /**
      * @Route("/misHospedajes", name="misHospedajes")
-    */
+     */
 
-    public function misHospedajesAction(Request $request){
-        try{
+    public function misHospedajesAction(Request $request)
+    {
+        try {
             $userId = $request->getSession()->get('id');
             $em = $this->getDoctrine()->getManager();
             $hospedajes = $this->getDoctrine()->getRepository('MainBundle:Hospedaje')->findByUsuario($userId);
-            return $this->render('MainBundle:Admin:index.html.twig', array('hospedajes'=>$hospedajes));
-        }catch (ORMException $e){
+            return $this->render('MainBundle:Admin:index.html.twig', array('hospedajes' => $hospedajes));
+        } catch (ORMException $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, por favor intente nuevamente');
             return $this->render('MainBundle:Security:login.html.twig');
         }
@@ -46,17 +51,19 @@ class HospedajeController extends Controller
     /**
      * @Route("/nuevoHospedaje", name="nuevoHospedaje", options={"expose"=true})
      */
-    public function nuevoHospedajeAction(){
+    public function nuevoHospedajeAction()
+    {
         $em = $this->getDoctrine()->getManager();
         $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
-        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos'=>$tipos));
+        return $this->render('MainBundle:Hospedaje:formNew.html.twig', array('tipos' => $tipos));
     }
 
     /**
      * @Route("/hospSave", name="hospSave", options={"expose"=true})
-    */
-    public function hospSaveAction(Request $request){
-        try{
+     */
+    public function hospSaveAction(Request $request)
+    {
+        try {
             $idUsuario = $request->getSession()->get('id');
             $em = $this->getDoctrine()->getManager();
             $usuario = $em->getRepository('MainBundle:Usuario')->find($idUsuario);
@@ -74,28 +81,30 @@ class HospedajeController extends Controller
             $hospedaje->setBorrado(0);
             $hospedaje->setUsuario($usuario);
             $hospedaje->setTipohospedaje($tipo);
+            $hospedaje->setImagen1($this->upload2Action($request));
             $em = $this->getDoctrine()->getManager();
             $em->persist($hospedaje);
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'El Hospedaje fue creado correctamente.');
             return $this->redirect($this->generateUrl('misHospedajes'));
-        }
-        catch (ORMException $e){
+        } catch (ORMException $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, intente nuevamente.');
             return $this->render('MainBundle:Admin:index.html.twig');
         }
     }
+
     /**
      * @Route("/checkDisp/{from}/{to}/{id}", name="checkDisp", options={"expose"=true})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function checkDispAction(Request $request, $from, $to, $id){
+    public function checkDispAction(Request $request, $from, $to, $id)
+    {
         $em = $this->getDoctrine()->getManager();
         $ocupada = $em->getRepository('MainBundle:Reserva')->findDisponibilidad($from, $to, $id);
-        if($ocupada == null){
-            $array = array('status'=> 200, 'msg'=>'Disponible!');
-        }else{
-            $array = array('status'=> 400, 'msg'=>'No disponible para las fechas seleccionadas.');
+        if ($ocupada == null) {
+            $array = array('status' => 200, 'msg' => 'Disponible!');
+        } else {
+            $array = array('status' => 400, 'msg' => 'No disponible para las fechas seleccionadas.');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -103,15 +112,14 @@ class HospedajeController extends Controller
     }
 
 
-
     /**
- * @Route("/marcarFav/{id}", name="marcarFav", options={"expose"=true})
- * @param $id
- * @return \Symfony\Component\HttpFoundation\RedirectResponse
- */
+     * @Route("/marcarFav/{id}", name="marcarFav", options={"expose"=true})
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function marcarFavoritoAction(Request $request, $id)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
             $favorito = new Favorito();
@@ -120,16 +128,16 @@ class HospedajeController extends Controller
             $userId = $session->get('id');
             $usuario = $em->getRepository('MainBundle:Usuario')->findOneById($userId);
             $favorito->setUsuario($usuario);
-            try{
+            try {
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($favorito);
                 $em->flush();
-                $array = array('status'=> 200, 'msg'=>'Marcado con éxito.');
-            }catch (ORMException $e){
-                $array = array('status'=> 400, 'msg'=>'Error al mercar favorito.');
+                $array = array('status' => 200, 'msg' => 'Marcado con éxito.');
+            } catch (ORMException $e) {
+                $array = array('status' => 400, 'msg' => 'Error al mercar favorito.');
             }
-        }catch (ORMException $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (ORMException $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -143,7 +151,7 @@ class HospedajeController extends Controller
      */
     public function desmarcarFavoritoAction(Request $request, $id)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
             $em = $this->getDoctrine()->getManager();
@@ -151,17 +159,17 @@ class HospedajeController extends Controller
             $userId = $session->get('id');
             $usuario = $em->getRepository('MainBundle:Usuario')->findOneById($userId);
             $em = $this->getDoctrine()->getManager();
-            $favorito = $em->getRepository('MainBundle:Favorito')->findOneBy(array('usuario'=>$usuario, 'hospedaje'=>$hospedaje));
-            try{
+            $favorito = $em->getRepository('MainBundle:Favorito')->findOneBy(array('usuario' => $usuario, 'hospedaje' => $hospedaje));
+            try {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($favorito);
                 $em->flush();
-                $array = array('status'=> 200, 'msg'=>'Desmarcado con éxito.');
-            }catch (ORMException $e){
-                $array = array('status'=> 400, 'msg'=>'Error al desmarcar favorito.');
+                $array = array('status' => 200, 'msg' => 'Desmarcado con éxito.');
+            } catch (ORMException $e) {
+                $array = array('status' => 400, 'msg' => 'Error al desmarcar favorito.');
             }
-        }catch (ORMException $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (ORMException $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -177,19 +185,19 @@ class HospedajeController extends Controller
 
     public function detalleHospAction($id, $desde, $hasta)
     {
-        try{
+        try {
 
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findDetalleHospedaje($id);
             $em = $this->getDoctrine()->getManager();
-            $consultas = $em->getRepository('MainBundle:Consulta')->findBy(array('hospedaje'=>$id));
-            if(!$hospedaje){
+            $consultas = $em->getRepository('MainBundle:Consulta')->findBy(array('hospedaje' => $id));
+            if (!$hospedaje) {
                 $this->get('session')->getFlashBag()->add('error', 'Error al recuperar el detalle del hospedaje, intente nuevamente.');
                 return $this->redirect($this->generateUrl('home'));
-            }else{
-                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje'=>$hospedaje, 'consultas'=>$consultas, 'desde'=>$desde, 'hasta'=>$hasta));
+            } else {
+                return $this->render('MainBundle:Hospedaje:detalle.html.twig', array('hospedaje' => $hospedaje, 'consultas' => $consultas, 'desde' => $desde, 'hasta' => $hasta));
             }
-        }catch (ORMException $e){
+        } catch (ORMException $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error inesperado, por favor intente nuevamente');
             return $this->redirect($this->generateUrl('home'));
         }
@@ -201,22 +209,22 @@ class HospedajeController extends Controller
      */
     public function hospPaginatedAction($page)
     {
-        try{
+        try {
             $nextPage = $page + 1;
             $prevPage = $page - 1;
-            $pageSize=10;
+            $pageSize = 10;
             $em = $this->getDoctrine()->getManager();
             $hospedajes = $em->getRepository('MainBundle:Hospedaje')->listarHospedajesPaginados($pageSize, $page);
-            if(!$hospedajes){
-                $array = array('status'=> 400, 'msg'=>'Hospedajes no encontrados');
-            }else{
+            if (!$hospedajes) {
+                $array = array('status' => 400, 'msg' => 'Hospedajes no encontrados');
+            } else {
                 $totalItems = count($hospedajes);
                 $pagesCount = ceil($totalItems / $pageSize);
-                return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes'=>$hospedajes,
-                    "pagesCount"=>$pagesCount, "next"=>$nextPage, "prev"=>$prevPage, "pagActual"=>$page, "total"=>$totalItems));
+                return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes' => $hospedajes,
+                    "pagesCount" => $pagesCount, "next" => $nextPage, "prev" => $prevPage, "pagActual" => $page, "total" => $totalItems));
             }
-        }catch (ORMException $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (ORMException $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -229,26 +237,26 @@ class HospedajeController extends Controller
      */
     public function searchHospAction(Request $request)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $desde = $request->get('desde');
             $hasta = $request->get('hasta');
             $hospedajes = $em->getRepository('MainBundle:Reserva')->findDisponibilidad($desde, $hasta);
-            if(!$hospedajes){
-                $array = array('status'=> 400, 'msg'=>'Hospedajes no encontrados');
-            }else{
-                if(self::checkSession($request)) {
+            if (!$hospedajes) {
+                $array = array('status' => 400, 'msg' => 'Hospedajes no encontrados');
+            } else {
+                if (self::checkSession($request)) {
                     $session = $request->getSession();
                     $userId = $session->get('id');
                     $em = $this->getDoctrine()->getManager();
                     $favoritos = $em->getRepository('MainBundle:Favorito')->findBy(array('usuario' => $userId));
                     return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes' => $hospedajes, 'favoritos' => $favoritos));
-                }else{
-                    return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes'=>$hospedajes));
+                } else {
+                    return $this->render('MainBundle:Default:tablaHospedajes.html.twig', array('hospedajes' => $hospedajes));
                 }
             }
-        }catch (Exception $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (Exception $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -276,6 +284,7 @@ class HospedajeController extends Controller
         $em->flush();;
         return $this->redirect($this->generateUrl('home'));
     }
+
     /**
      * @Route("/responderConsulta", name="responderConsulta")
      */
@@ -297,16 +306,16 @@ class HospedajeController extends Controller
      */
     public function hospedajeMsjDeleteAction($id)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
-            if(!$hospedaje){
-                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
-            }else{
-                return $this->render('MainBundle:Hospedaje:msjDelete.html.twig', array('hospedaje'=>$hospedaje));
+            if (!$hospedaje) {
+                $array = array('status' => 400, 'msg' => 'Hospedaje no encontrado');
+            } else {
+                return $this->render('MainBundle:Hospedaje:msjDelete.html.twig', array('hospedaje' => $hospedaje));
             }
-        }catch (Exception $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (Exception $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -324,19 +333,19 @@ class HospedajeController extends Controller
             $tieneReservas = $em->getRepository('MainBundle:Reserva')->findOneByReserva($idHospedajeDelete);
             $em = $this->getDoctrine()->getManager();
             $hospedajeDelete = $em->getRepository($this->repositorio)->findOneById($idHospedajeDelete);
-            if(!$tieneReservas){
+            if (!$tieneReservas) {
                 $hospedajeDelete->setBorrado(1);
                 $em->persist($hospedajeDelete);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeDelete->gettitulo().' fue borrado.');
-            }else{
+                $this->get('session')->getFlashBag()->add('success', 'El hospedaje ' . $hospedajeDelete->gettitulo() . ' fue borrado.');
+            } else {
                 $hospedajeDelete->setBorrado(1);
                 $em->persist($hospedajeDelete);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeDelete->gettitulo().' fue archivado ya que tiene hospedajes asociados.');
+                $this->get('session')->getFlashBag()->add('success', 'El hospedaje ' . $hospedajeDelete->gettitulo() . ' fue archivado ya que tiene hospedajes asociados.');
             }
             return $this->redirect($this->generateUrl('misHospedajes'));
-        }catch (ORMException $e){
+        } catch (ORMException $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error al eliminar el hospedaje, intente nuevamente.');
             return $this->redirect($this->generateUrl('misHospedajes'));
         }
@@ -349,19 +358,19 @@ class HospedajeController extends Controller
      */
     public function hospedajeEditAction($id)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
 
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
-            if(!$hospedaje){
-                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
-            }else{
-                return $this->render('MainBundle:Hospedaje:formEdit.html.twig', array('hospedaje'=>$hospedaje, 'tipos'=>$tipos));
+            if (!$hospedaje) {
+                $array = array('status' => 400, 'msg' => 'Hospedaje no encontrado');
+            } else {
+                return $this->render('MainBundle:Hospedaje:formEdit.html.twig', array('hospedaje' => $hospedaje, 'tipos' => $tipos));
             }
-        }catch (Exception $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (Exception $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -373,16 +382,16 @@ class HospedajeController extends Controller
      */
     public function hospEditSaveAction(Request $request)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $tipo = $em->getRepository($this->repositorio)->findOneById($request->get('idTipo'));
             $tipo->setNombre($request->get('nombre'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($tipo);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje '.$tipo->getNombre().' fue editado correctamente.');
+            $this->get('session')->getFlashBag()->add('success', 'El tipo de hospedaje ' . $tipo->getNombre() . ' fue editado correctamente.');
             return $this->redirect($this->generateUrl('tipoHosp'));
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error al edtar tipo de hospedaje, intente nuevamente.');
             return $this->redirect($this->generateUrl('tipoHosp'));
         }
@@ -395,16 +404,16 @@ class HospedajeController extends Controller
      */
     public function hospedajeMsjHabilitarAction($id)
     {
-        try{
+        try {
             $em = $this->getDoctrine()->getManager();
             $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
-            if(!$hospedaje){
-                $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
-            }else{
-                return $this->render('MainBundle:Hospedaje:msjHabilitar.html.twig', array('hospedaje'=>$hospedaje));
+            if (!$hospedaje) {
+                $array = array('status' => 400, 'msg' => 'Hospedaje no encontrado');
+            } else {
+                return $this->render('MainBundle:Hospedaje:msjHabilitar.html.twig', array('hospedaje' => $hospedaje));
             }
-        }catch (Exception $e){
-            $array = array('status'=> 400, 'msg'=>'Error inesperado, intente nuevamente');
+        } catch (Exception $e) {
+            $array = array('status' => 400, 'msg' => 'Error inesperado, intente nuevamente');
         }
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
@@ -416,18 +425,98 @@ class HospedajeController extends Controller
      */
     public function hospedajeHabilitarAction(Request $request)
     {
-        try{
+        try {
             $idHospedajeHabilitar = $request->get('idHospedaje');
             $em = $this->getDoctrine()->getManager();
             $hospedajeHabilitar = $em->getRepository($this->repositorio)->findOneById($idHospedajeHabilitar);
             $hospedajeHabilitar->setBorrado(0);
             $em->persist($hospedajeHabilitar);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('success', 'El hospedaje '.$hospedajeHabilitar->gettitulo().' fue habilitado.');
+            $this->get('session')->getFlashBag()->add('success', 'El hospedaje ' . $hospedajeHabilitar->gettitulo() . ' fue habilitado.');
             return $this->redirect($this->generateUrl('misHospedajes'));
-        }catch (ORMException $e){
+        } catch (ORMException $e) {
             $this->get('session')->getFlashBag()->add('error', 'Error al eliminar el hospedaje, intente nuevamente.');
             return $this->redirect($this->generateUrl('misHospedajes'));
         }
+    }
+
+    /**
+     * @Route("/imagenes", name="imagenes")
+     */
+
+    public function imagenesAction()
+    {
+        return $this->render('MainBundle:Imagen:index.html.twig');
+    }
+
+    /**
+     * @Route("/upload", name="upload")
+     */
+    public function uploadAction(Request $request)
+    {
+        if ($request->getMethod() == 'POST') {
+            $image = $request->files->get('img');
+            $status = 'success';
+            $uploadedURL='';
+            $message='';
+            if (($image instanceof UploadedFile) && ($image->getError() == '0')) {
+                if (($image->getSize() < 2000000000)) {
+                    $originalName = $image->getClientOriginalName();
+                    $name_array = explode('.', $originalName);
+                    $file_type = $name_array[sizeof($name_array) - 1];
+                    $valid_filetypes = array('jpg', 'jpeg', 'bmp', 'png');
+                    if (in_array(strtolower($file_type), $valid_filetypes)) {
+                        //Start Uploading File
+
+                        $document = new Document();
+                        $document->setFile($image);
+                        $document->setSubDirectory('uploads');
+                        $document->processFile();
+                        $uploadedURL=$uploadedURL = $document->getUploadDirectory() . DIRECTORY_SEPARATOR . $document->getSubDirectory() . DIRECTORY_SEPARATOR . $image->getBasename();
+
+                    } else {
+                        $status = 'failed';
+                        $message = 'Invalid File Type';
+                    }
+                } else {
+                    $status = 'failed';
+                    $message = 'Size exceeds limit';
+                }
+            } else {
+                $status = 'failed';
+                $message = 'File Error';
+            }
+            return $this->render('MainBundle:Imagen:index.html.twig',array('status'=>$status,'message'=>$message,'uploadedURL'=>$uploadedURL));
+        } else {
+            return $this->render('MainBundle:Imagen:index.html.twig');
+        }
+    }
+
+    /**
+     * @Route("/upload2", name="upload2")
+     */
+    public function upload2Action(Request $request)
+    {
+        $image = $request->files->get('img');
+        $uploadedURL='';
+        if (($image instanceof UploadedFile) && ($image->getError() == '0')) {
+            if (($image->getSize() < 2000000000)) {
+                $originalName = $image->getClientOriginalName();
+                $name_array = explode('.', $originalName);
+                $file_type = $name_array[sizeof($name_array) - 1];
+                $valid_filetypes = array('jpg', 'jpeg', 'bmp', 'png');
+                if (in_array(strtolower($file_type), $valid_filetypes)) {
+                    //Start Uploading File
+
+                    $document = new Document();
+                    $document->setFile($image);
+                    $document->setSubDirectory('uploads');
+                    $document->processFile();
+                    $uploadedURL=$uploadedURL = $document->getUploadDirectory() . DIRECTORY_SEPARATOR . $document->getSubDirectory() . DIRECTORY_SEPARATOR . $image->getBasename();
+                }
+            }
+        }
+        return $uploadedURL;
+
     }
 }

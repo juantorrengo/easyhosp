@@ -7,7 +7,6 @@
             <th>Título</th>
             <th>Dirección</th>
             <th>Capacidad</th>
-            <th>Disponible</th>
             <th>Acciones</th>
         </tr>
         </thead>
@@ -19,11 +18,7 @@
                 <td>{{ hospedaje.titulo }}</td>
                 <td>{{ hospedaje.direccion }}</td>
                 <td>{{ hospedaje.capacidad }}</td>
-                {% if hospedaje.borrado ==  1  %}
-                    <td> NO </td>
-                {% else %}
-                    <td> SI </td>
-                {% endif %}
+
                 <td>
                     <a class="btn btn-primary" href="{{ path('detalleHosp', {'id':hospedaje.id}) }}" >Ver</a>
 
