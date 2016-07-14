@@ -485,6 +485,7 @@ $(document).ready(function() {
     });
 
     // HABILITAR HOSPEDAJE
+
     $('.btnHabilitarHosp').on('click', function () {
         var idHosp = $(this).find('.idHosp').val();
         var url = $(this).attr('data-path');
