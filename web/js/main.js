@@ -447,7 +447,64 @@ $(document).ready(function() {
         });
     });
 
+    // EDITAR HOSPEDAJE
+    $('.btnEditHosp').on('click', function (e) {
+        e.preventDefault();
+        var idHosp = $(this).find('.idHospedaje').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+    // ELIMINAR HOSPEDAJE
+
+    $('.btnDeleteHosp').on('click', function () {
+        var idHosp = $(this).find('.idHosp').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+
+    // HABILITAR HOSPEDAJE
+
+    $('.btnHabilitarHosp').on('click', function () {
+        var idHosp = $(this).find('.idHosp').val();
+        var url = $(this).attr('data-path');
+        url = url.replace('x', idHosp);
+        $.ajax({
+            url: url,
+            success: function (data) {
+                if(data.status == 400){
+                    alert(data.msg);
+                }else{
+                    $('#modal-form').find('.modal-content').html(data);
+                    $('#modal-form').modal();
+                }
+            }
+        });
+    });
+
 });//Fin ready
+
 
 //HOSPEDAJES
 
