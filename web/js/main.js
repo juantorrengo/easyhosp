@@ -577,6 +577,22 @@ tablaHospedajes.on('click', '.verDetalle', function (e) {
     });
 });
 
+tablaHospedajes.on('click', '.verMiDetalle', function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-path');
+    $.ajax({
+        url: Routing.generate('miDetalle', {'id':id}),
+        success: function (data) {
+            if(data.status == 400){
+                $('#ajaxAlerts').find('.close').next().html(data.msg);
+            }else{
+                $('#modal-form').find('.modal-content').html(data);
+                $('#modal-form').modal();
+            }
+        }
+    });
+});
+
 
 tablaHospedajes.on('click', '.markFav', function (e) {
     e.preventDefault();

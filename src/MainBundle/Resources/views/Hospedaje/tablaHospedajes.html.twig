@@ -1,8 +1,8 @@
-<div class="table-responsive col-lg-12">
-    <table class="table table-striped table-hover">
-
-        <thead>
-        <tr class="beGrey">
+<div class="hidden" id="hospIndexPath" data-path="{{ path('hospPaginated', { 'page': 'x'}) }}"></div>
+<div class="hidden" id="hospDetalleIndexPath" data-path="{{ path('detalleHosp', { 'id': 'x'}) }}"></div>
+<table class="table table-hover table-bordered">
+    <thead>
+    <tr class="beGrey">
             <th></th>
             <th>Título</th>
             <th>Dirección</th>
@@ -20,7 +20,10 @@
                 <td>{{ hospedaje.capacidad }}</td>
 
                 <td>
-                    <a class="btn btn-primary" href="{{ path('detalleHosp', {'id':hospedaje.id}) }}" >Ver</a>
+                    <a href="#" data-path="{{ path('miDetalle', { 'id': 'x'}) }}" class="btnDeleteHosp btn btn-sm btn-primary">
+                        Ver
+                        <input type="hidden" class="idHosp" value="{{ hospedaje.id }}">
+                    </a>
 
                     <a href="#" data-path="{{ path('hospedajeEdit', { 'id': 'x'}) }}" class="btnDeleteHosp btn btn-sm btn-warning">
                         Editar

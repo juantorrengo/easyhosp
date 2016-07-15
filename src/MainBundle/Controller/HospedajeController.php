@@ -224,6 +224,31 @@ class HospedajeController extends Controller
     }
 
     /**
+     * @Route("/miDetalle/{id}", name="miDetalle")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function miDetalleAction($id)
+    {
+        try {
+
+            $em = $this->getDoctrine()->getManager();
+            $hospedaje = $em->getRepository($this->repositorio)->findDetalleHospedaje($id);
+            $em = $this->getDoctrine()->getManager();
+            $consultas = $em->getRepository('MainBundle:Consulta')->findBy(array('hospedaje' => $id));
+            if (!$hospedaje) {
+                $this->get('session')->getFlashBag()->add('error', 'Error al recuperar el detalle del hospedaje, intente nuevamente.');
+                return $this->redirect($this->generateUrl('home'));
+            } else {
+                return $this->render('MainBundle:Hospedaje:miDetalle.html.twig', array('hospedaje' => $hospedaje, 'consultas' => $consultas));
+            }
+        } catch (ORMException $e) {
+            $this->get('session')->getFlashBag()->add('error', 'Error inesperado, por favor intente nuevamente');
+            return $this->redirect($this->generateUrl('home'));
+        }
+    }
+
+    /**
      * @Route("/hospPaginated", name="hospPaginated", defaults={"page" = 1})
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
