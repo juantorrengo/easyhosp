@@ -14,6 +14,19 @@ class HospedajeRepository extends \Doctrine\ORM\EntityRepository
     /*
 	 * Función que devuelve todos los hospedajes paginados
 	 */
+
+    public function findConTipo($id) {
+        $dql = 'SELECT  h, h.imagen1, h.imagen2, h.imagen3, h.imagen4, h.imagen5, h.borrado, h.titulo, h.id, h.direccion, h.localidad, h.descripcion, h.capacidad, th.nombre as tipoHosp
+                FROM MainBundle:Hospedaje h
+                INNER JOIN MainBundle:TipoHospedaje th WITH h.tipohospedaje = th.id
+                WHERE (h.id = :id)';
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':id', $id)
+            ->getOneOrNullResult();
+    }
+
+
     public function listarHospedajesPaginados($pageSize, $currentPage) {
         $em = $this->getEntityManager();
         $dql = 'SELECT h, h.imagen1, h.imagen2, h.imagen3, h.imagen4, h.imagen5, h.borrado, h.titulo, h.id, h.direccion, h.localidad, h.descripcion, h.capacidad, th.nombre as tipoHosp

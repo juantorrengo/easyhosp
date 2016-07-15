@@ -25,7 +25,11 @@
             <div class="col-sm-7">
                 <select class="form-control" name="tipoHospedaje" id="tipoHospedaje">
                     {% for tipo in tipos %}
-                        <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                        {% if hospedaje.tipoHosp == tipo.nombre %}
+                            <option selected="selected" value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                        {% else %}
+                            <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>

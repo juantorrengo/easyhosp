@@ -407,7 +407,7 @@ class HospedajeController extends Controller
             $em = $this->getDoctrine()->getManager();
             $tipos = $em->getRepository('MainBundle:TipoHospedaje')->findAllActives();
             $em = $this->getDoctrine()->getManager();
-            $hospedaje = $em->getRepository($this->repositorio)->findOneById($id);
+            $hospedaje = $em->getRepository($this->repositorio)->findConTipo($id);
             if(!$hospedaje){
                 $array = array('status'=> 400, 'msg'=>'Hospedaje no encontrado');
             }else{
